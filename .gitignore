@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+/ShapeViewer/Debug
+/ShapeViewer/x64/
+/Vendors/glad/Debug/
+/Vendors/glad/x64/
+/Vendors/glm/Debug/
+/Vendors/glm/x64/
+/Vendors/glm/glm/x64/
+/Vendors/polyToTriang/Debug/
+/Vendors/polyToTriang/x64/
+/Vendors/spdlog/Debug/
+/Vendors/spdlog/x64/
+/x64/

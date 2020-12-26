@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="detail\compute_common.hpp" />
+    <ClInclude Include="detail\compute_vector_relational.hpp" />
+    <ClInclude Include="detail\qualifier.hpp" />
+    <ClInclude Include="detail\setup.hpp" />
+    <ClInclude Include="detail\type_float.hpp" />
+    <ClInclude Include="detail\type_half.hpp" />
+    <ClInclude Include="detail\type_mat2x2.hpp" />
+    <ClInclude Include="detail\type_mat2x3.hpp" />
+    <ClInclude Include="detail\type_mat2x4.hpp" />
+    <ClInclude Include="detail\type_mat3x2.hpp" />
+    <ClInclude Include="detail\type_mat3x3.hpp" />
+    <ClInclude Include="detail\type_mat3x4.hpp" />
+    <ClInclude Include="detail\type_mat4x2.hpp" />
+    <ClInclude Include="detail\type_mat4x3.hpp" />
+    <ClInclude Include="detail\type_mat4x4.hpp" />
+    <ClInclude Include="detail\type_quat.hpp" />
+    <ClInclude Include="detail\type_vec1.hpp" />
+    <ClInclude Include="detail\type_vec2.hpp" />
+    <ClInclude Include="detail\type_vec3.hpp" />
+    <ClInclude Include="detail\type_vec4.hpp" />
+    <ClInclude Include="detail\_features.hpp" />
+    <ClInclude Include="detail\_fixes.hpp" />
+    <ClInclude Include="detail\_noise.hpp" />
+    <ClInclude Include="detail\_swizzle.hpp" />
+    <ClInclude Include="detail\_swizzle_func.hpp" />
+    <ClInclude Include="detail\_vectorize.hpp" />
+    <ClInclude Include="glm\detail\compute_common.hpp" />
+    <ClInclude Include="glm\detail\compute_vector_relational.hpp" />
+    <ClInclude Include="glm\detail\qualifier.hpp" />
+    <ClInclude Include="glm\detail\setup.hpp" />
+    <ClInclude Include="glm\detail\type_float.hpp" />
+    <ClInclude Include="glm\detail\type_half.hpp" />
+    <ClInclude Include="glm\detail\type_mat2x2.hpp" />
+    <ClInclude Include="glm\detail\type_mat2x3.hpp" />
+    <ClInclude Include="glm\detail\type_mat2x4.hpp" />
+    <ClInclude Include="glm\detail\type_mat3x2.hpp" />
+    <ClInclude Include="glm\detail\type_mat3x3.hpp" />
+    <ClInclude Include="glm\detail\type_mat3x4.hpp" />
+    <ClInclude Include="glm\detail\type_mat4x2.hpp" />
+    <ClInclude Include="glm\detail\type_mat4x3.hpp" />
+    <ClInclude Include="glm\detail\type_mat4x4.hpp" />
+    <ClInclude Include="glm\detail\type_quat.hpp" />
+    <ClInclude Include="glm\detail\type_vec1.hpp" />
+    <ClInclude Include="glm\detail\type_vec2.hpp" />
+    <ClInclude Include="glm\detail\type_vec3.hpp" />
+    <ClInclude Include="glm\detail\type_vec4.hpp" />
+    <ClInclude Include="glm\detail\_features.hpp" />
+    <ClInclude Include="glm\detail\_fixes.hpp" />
+    <ClInclude Include="glm\detail\_noise.hpp" />
+    <ClInclude Include="glm\detail\_swizzle.hpp" />
+    <ClInclude Include="glm\detail\_swizzle_func.hpp" />
+    <ClInclude Include="glm\detail\_vectorize.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="detail\func_common.inl" />
+    <None Include="detail\func_common_simd.inl" />
+    <None Include="detail\func_exponential.inl" />
+    <None Include="detail\func_exponential_simd.inl" />
+    <None Include="detail\func_geometric.inl" />
+    <None Include="detail\func_geometric_simd.inl" />
+    <None Include="detail\func_integer.inl" />
+    <None Include="detail\func_integer_simd.inl" />
+    <None Include="detail\func_matrix.inl" />
+    <None Include="detail\func_matrix_simd.inl" />
+    <None Include="detail\func_packing.inl" />
+    <None Include="detail\func_packing_simd.inl" />
+    <None Include="detail\func_trigonometric.inl" />
+    <None Include="detail\func_trigonometric_simd.inl" />
+    <None Include="detail\func_vector_relational.inl" />
+    <None Include="detail\func_vector_relational_simd.inl" />
+    <None Include="detail\type_half.inl" />
+    <None Include="detail\type_mat2x2.inl" />
+    <None Include="detail\type_mat2x3.inl" />
+    <None Include="detail\type_mat2x4.inl" />
+    <None Include="detail\type_mat3x2.inl" />
+    <None Include="detail\type_mat3x3.inl" />
+    <None Include="detail\type_mat3x4.inl" />
+    <None Include="detail\type_mat4x2.inl" />
+    <None Include="detail\type_mat4x3.inl" />
+    <None Include="detail\type_mat4x4.inl" />
+    <None Include="detail\type_mat4x4_simd.inl" />
+    <None Include="detail\type_quat.inl" />
+    <None Include="detail\type_quat_simd.inl" />
+    <None Include="detail\type_vec1.inl" />
+    <None Include="detail\type_vec2.inl" />
+    <None Include="detail\type_vec3.inl" />
+    <None Include="detail\type_vec4.inl" />
+    <None Include="detail\type_vec4_simd.inl" />
+    <None Include="glm\detail\func_common.inl" />
+    <None Include="glm\detail\func_common_simd.inl" />
+    <None Include="glm\detail\func_exponential.inl" />
+    <None Include="glm\detail\func_exponential_simd.inl" />
+    <None Include="glm\detail\func_geometric.inl" />
+    <None Include="glm\detail\func_geometric_simd.inl" />
+    <None Include="glm\detail\func_integer.inl" />
+    <None Include="glm\detail\func_integer_simd.inl" />
+    <None Include="glm\detail\func_matrix.inl" />
+    <None Include="glm\detail\func_matrix_simd.inl" />
+    <None Include="glm\detail\func_packing.inl" />
+    <None Include="glm\detail\func_packing_simd.inl" />
+    <None Include="glm\detail\func_trigonometric.inl" />
+    <None Include="glm\detail\func_trigonometric_simd.inl" />
+    <None Include="glm\detail\func_vector_relational.inl" />
+    <None Include="glm\detail\func_vector_relational_simd.inl" />
+    <None Include="glm\detail\type_half.inl" />
+    <None Include="glm\detail\type_mat2x2.inl" />
+    <None Include="glm\detail\type_mat2x3.inl" />
+    <None Include="glm\detail\type_mat2x4.inl" />
+    <None Include="glm\detail\type_mat3x2.inl" />
+    <None Include="glm\detail\type_mat3x3.inl" />
+    <None Include="glm\detail\type_mat3x4.inl" />
+    <None Include="glm\detail\type_mat4x2.inl" />
+    <None Include="glm\detail\type_mat4x3.inl" />
+    <None Include="glm\detail\type_mat4x4.inl" />
+    <None Include="glm\detail\type_mat4x4_simd.inl" />
+    <None Include="glm\detail\type_quat.inl" />
+    <None Include="glm\detail\type_quat_simd.inl" />
+    <None Include="glm\detail\type_vec1.inl" />
+    <None Include="glm\detail\type_vec2.inl" />
+    <None Include="glm\detail\type_vec3.inl" />
+    <None Include="glm\detail\type_vec4.inl" />
+    <None Include="glm\detail\type_vec4_simd.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="glm\detail\glm.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{e3587ab1-eaee-4053-8fc6-7ca2d3e3fc95}</ProjectGuid>
+    <RootNamespace>glm</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Vendors\glm</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Vendors\glm</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Vendors\glm</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Vendors\glm</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

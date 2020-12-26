@@ -1,0 +1,10 @@
+14.28
+
+"nmake -f makefile.vc MSVC_VER=1928 WIN64=1"
+
+nmake -f makefile.vc MSVC_VER=1928 WIN64=1 install
+
+nmake -f makefile.vc MSVC_VER=1928 WIN64=1 devinstall
+
+
+C:\OSGeo4W64\lib\proj.lib
