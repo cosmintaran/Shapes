@@ -17,7 +17,7 @@ cApp::~cApp()
 #ifdef _DEBUG
     FreeConsole();
 #endif
-    //delete window;
+   // delete window;  
 }
 
 bool cApp::OnInit()

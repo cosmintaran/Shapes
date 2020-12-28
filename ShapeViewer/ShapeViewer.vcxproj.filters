@@ -63,13 +63,22 @@
     <ClInclude Include="Widgets\Shapes\Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Widgets\Layer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Widgets\PolyToTriangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="core\Timestep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\ILayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\EsriShpLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\Shapes\EsriShpPolygon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\Envelope.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,7 +113,13 @@
     <ClCompile Include="Widgets\Shapes\Polygon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\Layer.cpp">
+    <ClCompile Include="Widgets\ILayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\EsriShpLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\Shapes\EsriShpPolygon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

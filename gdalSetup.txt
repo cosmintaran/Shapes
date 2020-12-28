@@ -1,6 +1,6 @@
 14.28
 
-"nmake -f makefile.vc MSVC_VER=1928 WIN64=1"
+nmake -f makefile.vc MSVC_VER=1928 WIN64=1
 
 nmake -f makefile.vc MSVC_VER=1928 WIN64=1 install
 

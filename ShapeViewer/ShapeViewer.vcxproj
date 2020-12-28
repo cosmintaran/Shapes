@@ -192,8 +192,11 @@ xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configurat
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Widgets\Layer.h" />
+    <ClInclude Include="Widgets\Envelope.h" />
+    <ClInclude Include="Widgets\ILayer.h" />
+    <ClInclude Include="Widgets\EsriShpLayer.h" />
     <ClInclude Include="Widgets\PolyToTriangle.h" />
+    <ClInclude Include="Widgets\Shapes\EsriShpPolygon.h" />
     <ClInclude Include="Widgets\Shapes\IShape.h" />
     <ClInclude Include="Widgets\Shapes\Polygon.h" />
     <ClInclude Include="Widgets\Shapes\ShpTypes.h" />
@@ -213,7 +216,9 @@ xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configurat
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Widgets\Layer.cpp" />
+    <ClCompile Include="Widgets\ILayer.cpp" />
+    <ClCompile Include="Widgets\EsriShpLayer.cpp" />
+    <ClCompile Include="Widgets\Shapes\EsriShpPolygon.cpp" />
     <ClCompile Include="Widgets\Shapes\IShape.cpp" />
     <ClCompile Include="Widgets\Shapes\Polygon.cpp" />
   </ItemGroup>

@@ -3,70 +3,23 @@
 #include "core/Id.h"
 #include "Widgets/Shapes/ShpTypes.h"
 #include "core/Log.h"
-#include <ogrsf_frmts.h>
-#include <filesystem>
-#include <stdlib.h>
+#include <wx/progdlg.h>
 
+BEGIN_EVENT_TABLE(cMainWindow, wxFrame)
+EVT_CLOSE(cMainWindow::OnClose)
+END_EVENT_TABLE()
 
 
 cMainWindow::cMainWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	:wxFrame(parent, id, title, pos, size, style, name), _aspectRatio(0.0f)
 {
-
-
+	_envelope.MaxX =  1.0;
+	_envelope.MaxY =  1.0;
+	_envelope.MinX = -1.0;
+	_envelope.MinY = -1.0;
 	InitializeUIComponents(size);
 
-	//Test 
-	SV::GS::Layer* layer1 = new SV::GS::Layer("TestLayer", SV::GS::ShapeType::Polygon, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.0f, 0.0f, 0.8f));
-	_layers.emplace_back(layer1);
-
-	for (int i = 0; i < 50; ++i) {
-		std::vector<glm::vec3> polygon;
-		polygon.emplace_back(((float)rand() / (RAND_MAX)) + 1.5, ((float)rand() / (RAND_MAX)) + 1, 0.0f);
-		polygon.emplace_back(((float)rand() / (RAND_MAX)) + 1.5, ((float)rand() / (RAND_MAX)) + 1, 0.0f);
-		polygon.emplace_back(((float)rand() / (RAND_MAX)) + 1.5, ((float)rand() / (RAND_MAX)) + 1, 0.0f);
-		_layers[0]->AddShape(polygon);
-	}
-
-	//std::vector<glm::vec3> polygon1;
-	//polygon1.emplace_back(-0.3812f, 0.3490f, 0.0f);
-	//polygon1.emplace_back(-0.0197f, 0.1910f, 0.0f);
-	//polygon1.emplace_back(0.3598f, 0.1910f, 0.0f);
-	//polygon1.emplace_back(0.4728f, 0.5342f, 0.0f);
-	//polygon1.emplace_back(-0.2366f, 0.6787f, 0.0f);
-	//_layers[0]->AddShape(polygon1);
-
-	//std::vector<glm::vec3> polygon2;
-	//polygon2.emplace_back(-0.3812f, 0.3490f, 0.0f);
-	//polygon2.emplace_back(-0.0197f, 0.1910f, 0.0f);
-	//polygon2.emplace_back(0.3598f, 0.1910f, 0.0f);
-	//polygon2.emplace_back(0.4638f, 0.0600f, 0.0f);
-	//polygon2.emplace_back(0.4050f, -0.3238f, 0.0f);
-	//polygon2.emplace_back(0.0842f, -0.2470f, 0.0f);
-	//polygon2.emplace_back(0.0842f, -0.1206f, 0.0f);
-	//polygon2.emplace_back(-0.3540f, -0.1206f, 0.0f);
-	//polygon2.emplace_back(-0.4399f, 0.0420f, 0.0f);
-	//_layers[0]->AddShape(polygon2);
-
-	//std::vector<glm::vec3> polygon3;
-	//polygon3.emplace_back(-0.5980f, 0.1007f, 0.0f);
-	//polygon3.emplace_back(-0.2411f, 0.1007f, 0.0f);
-	//polygon3.emplace_back(-0.1101f, -0.2877f, 0.0f);
-	//polygon3.emplace_back(-0.1778f, -0.5360f, 0.0f);
-	//polygon3.emplace_back(-0.3450f, -0.5360f, 0.0f);
-	//polygon3.emplace_back(-0.6568f, -0.2877f, 0.0f);
-	//polygon3.emplace_back(-0.7457f, -0.2169f, 0.0f);
-	//_layers[0]->AddShape(polygon3);
-
-	//SV::GS::Layer* layer2 = new SV::GS::Layer("TestLayer2", SV::GS::ShapeType::Polygon, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-	//_layers.emplace_back(layer2);
-	//std::vector<glm::vec3> polygon4;
-	//polygon4.emplace_back(0.2413f, -0.6381f, 0.0f);
-	//polygon4.emplace_back(0.5021f, -0.4861f, 0.0f);
-	//polygon4.emplace_back(0.6827f, -0.6381f, 0.0f);
-	//polygon4.emplace_back(0.3760f, -0.8359f, 0.0f);
-	//_layers[1]->AddShape(polygon4);
-
+	
 }
 
 void cMainWindow::InitializeUIComponents(const wxSize& size)
@@ -90,11 +43,19 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 
 	SetMenuBar(m_pMenuBar);
 
-	CreateStatusBar(2);
+	CreateStatusBar(4);
 	SetStatusText(wxT("0.00000 0.00000 "), 0);
+	SetStatusText(wxT("                "), 2);
+	auto m_statusbar = this->GetStatusBar();
+	wxRect rect;
+	m_statusbar->GetFieldRect(3, rect);
+	m_statusbar->Fit();
 
-	_aspectRatio = (float)size.GetWidth() / (float)size.GetHeight();
-	_camera = std::make_unique<SV::GS::OrotographicCamera>((-_aspectRatio * _zoomLevel), (_aspectRatio * _zoomLevel), -_zoomLevel, _zoomLevel, -1.0f, 1.0f);
+	 gauge = new wxGauge(m_statusbar, wxID_ANY, 100, rect.GetPosition(), rect.GetSize(), wxGA_SMOOTH);
+	_aspectRatio = ((float)size.GetWidth() / (float)size.GetHeight());
+	float bottom = ((_envelope.MaxX - _envelope.MinX) * 0.5) * _aspectRatio * _zoomLevel;
+	float top = ((_envelope.MaxY - _envelope.MinY) * 0.5) * _aspectRatio * _zoomLevel;
+	_camera = std::make_unique<SV::GS::OrotographicCamera>(-bottom, bottom, -top, top, -1.0f, 10.0f);
 	_canvas = new SV::GS::DeviceContext(this, Window::ID::GLCONTEXT, nullptr, { 0, 0 }, size);
 
 	Fit();
@@ -108,8 +69,6 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 	_canvas->Bind(wxEVT_MOTION, &cMainWindow::OnMouseMove, this);
 	_canvas->Bind(wxEVT_MIDDLE_DCLICK, &cMainWindow::OnScrollMouseDoubleClicked, this);
 	_canvas->Bind(wxEVT_KEY_UP, &cMainWindow::OnKeyUp, this);
-
-
 }
 
 
@@ -127,7 +86,6 @@ void cMainWindow::vPaint(SV::CORE::Timestep ts)
 {
 
 	if (_canvas == nullptr || !IsShownOnScreen()) return;
-	//CAD_TRACE("{0}.s", ts);
 
 	bool isPoisitionChanged = false;
 
@@ -174,15 +132,19 @@ void cMainWindow::Paint()
 void cMainWindow::OnScroll(wxMouseEvent& event)
 {
 	float zoomLevel = (float)(_zoomLevel - (float)event.GetWheelRotation() * 0.0016 * _zoomLevel);
-	if (zoomLevel < 0.01 || zoomLevel > 10) return;
 
 	const glm::vec4 beforeZoom = ScreenToClipSpace(event.GetX(), event.GetY());
 	_zoomLevel = zoomLevel;
-	_camera->SetProjection((-_aspectRatio * _zoomLevel), (_aspectRatio * _zoomLevel), -_zoomLevel, _zoomLevel);
-	const glm::vec4 afterZoom = ScreenToClipSpace(event.GetX(), event.GetY());
 
-	const glm::vec4 diff = beforeZoom - afterZoom;
-	_camera->SetPosition(_camera->GetPosition() + glm::vec3(diff.x, diff.y, 0.0f));
+	const float left = static_cast<float>((float)_envelope.MinX / _zoomLevel);
+	const float bottom = static_cast<float>((float)_envelope.MinY / _zoomLevel);
+	const float right = static_cast<float>(_envelope.MaxX * _aspectRatio * _zoomLevel);
+	const float top = static_cast<float>(_envelope.MaxY * _aspectRatio * _zoomLevel);
+	_camera->SetProjection(left, right, bottom, top);
+
+	//const glm::vec4 afterZoom = ScreenToClipSpace(event.GetX(), event.GetY());
+	//const glm::vec4 diff = beforeZoom - afterZoom;
+	//_camera->SetPosition(_camera->GetPosition() + glm::vec3(diff.x, diff.y, 0.0f));
 }
 
 void cMainWindow::OnSize(wxSizeEvent& event)
@@ -190,7 +152,7 @@ void cMainWindow::OnSize(wxSizeEvent& event)
 	wxFrame::OnSize(event);
 	_aspectRatio = (float)event.GetSize().GetWidth() / (float)event.GetSize().GetHeight();
 	_canvas->Resize(event.GetSize());
-	_camera->SetProjection((-_aspectRatio * _zoomLevel), (_aspectRatio * _zoomLevel), -_zoomLevel, _zoomLevel);
+	_camera->SetProjection((_aspectRatio * _envelope.MinX * _zoomLevel), (_aspectRatio * _envelope.MaxX * _zoomLevel), _envelope.MinY * _zoomLevel, _envelope.MaxY * _zoomLevel);
 
 }
 
@@ -246,8 +208,8 @@ void cMainWindow::OnMouseMove(wxMouseEvent& event)
 void cMainWindow::OnScrollMouseDoubleClicked(wxMouseEvent& event)
 {
 	_zoomLevel = 1.0f;
-	_camera->SetProjection((-_aspectRatio * _zoomLevel), (_aspectRatio * _zoomLevel), -_zoomLevel, _zoomLevel);
-	_cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	_camera->SetProjection((_aspectRatio * _envelope.MinX * _zoomLevel), (_aspectRatio * _envelope.MaxX * _zoomLevel), _envelope.MinY * _zoomLevel, _envelope.MaxY * _zoomLevel);
+	_cameraPosition = glm::vec3((_aspectRatio * _envelope.MaxX - _aspectRatio * _envelope.MinX) *0.5, (_envelope.MaxY - _envelope.MinY) * 0.5, 0.0f);
 	_camera->SetPosition(_cameraPosition);
 }
 
@@ -283,78 +245,57 @@ void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 {
 	wxFileDialog openFileDialog(this, "Select a shapefile", "", "", "shp files (*.shp)|*.shp", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-	//Sterge memoria GDAL!!!!!!!!!!!!!!!!!!!!
-
 	if (openFileDialog.ShowModal() == wxID_OK) {
-		GDALAllRegister();
 
-		GDALDataset* poDS = nullptr;
-		poDS = (GDALDataset*)GDALOpenEx(openFileDialog.GetPath(), GDAL_OF_VECTOR, NULL, NULL, NULL);
-		if (poDS == nullptr)
-		{
-			CAD_ERROR("Open file {0} failed.", openFileDialog.GetFilename());
-			return;
-		}
+		SetStatusText(wxT("Loading shp file"), 3);
 
-		OGRLayer* poLayer;
-
-		wxString fileName = openFileDialog.GetFilename().RemoveLast(4);
-		size_t pos = fileName.find(".shp");
-		if (pos > 0) {
+		for (int i = 0; i < 100; ++i) {
+			//if (!dialog.Update(i)) {
+			//	// Cancelled by user.
+			//	break;
+			//}
 
 		}
-		poLayer = poDS->GetLayerByName(fileName);
-		if (poLayer == nullptr) {
 
-			CAD_ERROR("Open file {0} failed.", openFileDialog.GetFilename());
-			return;
-		}
-		for (auto& poFeature : poLayer)
-		{
-			OGRFeature* poFeature;
+		SV::GS::EsriShpLayer* lay = new SV::GS::EsriShpLayer(openFileDialog.GetFilename().c_str().AsChar(), openFileDialog.GetPath().c_str().AsChar(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.0f, 0.0f, 0.8f));
+		gauge->Pulse();
+		if (lay->ReadShapeFile()) {
+			if (_layers.size() == 0){
+				_envelope = lay->GetEnvelope();
+				_zoomLevel = 1.0f;
 
-			poLayer->ResetReading();
-			while ((poFeature = poLayer->GetNextFeature()) != NULL)
-			{
-				for (auto&& oField : *poFeature)
-				{
-					switch (oField.GetType())
-					{
-					case OFTInteger:
-						CAD_INFO("{0}", oField.GetInteger());
-						break;
-					case OFTInteger64:
-						CAD_INFO("{0}", oField.GetInteger64());
-						break;
-					case OFTReal:
-						CAD_INFO("{0}", oField.GetDouble());
-						break;
-					case OFTString: {
-						bool isEmpty = oField.empty();
-						if (!isEmpty) {
-							CAD_INFO(oField.GetAsString());
-						}
-					}
-						break;
-					default:
-						CAD_INFO(oField.GetAsString());
-						break;
-					}
-				}
+				const float left   = static_cast<float>(_envelope.MinX * _zoomLevel);
+				const float bottom = static_cast<float>(_envelope.MinY * _zoomLevel);
+				const float right  = static_cast<float>(_envelope.MaxX * _aspectRatio * _zoomLevel);
+				const float top    = static_cast<float>(_envelope.MaxY * _aspectRatio * _zoomLevel);
+				_camera->SetProjection(left, right, bottom, top);
+				_cameraPosition = glm::vec3((right-left) *0.5, (top-bottom)*0.5, 0.0f);
+				_camera->SetPosition(_cameraPosition);
 			}
-			OGRFeature::DestroyFeature(poFeature);
+			_layers.push_back(lay);
 		}
-
-		GDALClose(poDS);
 	}
 
+	SetStatusText(wxT(""), 3);
+	gauge->SetValue(0);
+}
+
+void cMainWindow::OnClose(wxCloseEvent& event)
+{
+	for (auto& l : _layers) {
+		delete l;
+		l = nullptr;
+	}
+	_layers.clear();
+
+	event.Skip();
 }
 
 glm::vec4 cMainWindow::ScreenToClipSpace(float posX, float posY) const
 {
 	const glm::vec4 ndcCoords = ScreenToNdc(posX, posY);
 	const glm::vec4 translatedNDC(_camera->GetPosition().x, _camera->GetPosition().y, 0.0f, 0.0f);
-	const glm::vec4 coords = _camera->GetInvercedViewProjection() * ndcCoords;
+	const glm::vec4 coords = _camera->GetInversProjection() * ndcCoords;
 	return coords + translatedNDC;
 }
 

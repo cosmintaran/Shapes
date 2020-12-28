@@ -7,8 +7,9 @@
 
 #include "Render/DeviceContext.h"
 #include "Render/Camera.h"
-#include <Widgets/Layer.h>
+#include <Widgets/EsriShpLayer.h>
 #include "core/Timestep.h"
+#include <Widgets/Envelope.h>
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -25,21 +26,24 @@ public:
 		const wxString& name = wxASCII_STR(wxFrameNameStr));
 	~cMainWindow();
 	void vPaint(SV::CORE::Timestep );
+	DECLARE_EVENT_TABLE()
 
 private:
 	SV::GS::DeviceContext* _canvas = nullptr;
 	std::unique_ptr <SV::GS::OrotographicCamera> _camera;
-	std::vector<SV::GS::Layer*> _layers;
+	std::vector<SV::GS::ILayer*> _layers;
 	float _zoomLevel = 1.0f;
 	bool _isDragged = false;
 	const float _cameraMoveSpeed = 1.0f;
 	float _aspectRatio;
 	glm::vec3 _cameraPosition{0.0f};
 	glm::ivec2 _lastMousePosition;
+	SV::Envelope _envelope;
 
 	wxMenuBar* m_pMenuBar = nullptr;
 	wxMenu* m_pFileMenu = nullptr;
 	wxMenu* m_pHelpMenu = nullptr;
+	wxGauge* gauge = nullptr;
 private:
 
 	void InitializeUIComponents(const wxSize& size);
@@ -53,6 +57,7 @@ private:
 	void OnScrollMouseDoubleClicked(wxMouseEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
 	void OnMenuOpenCmd(wxCommandEvent& WXUNUSED(event));
+	void OnClose(wxCloseEvent& event);
 	[[nodiscard]] glm::vec4 ScreenToClipSpace(float posX, float posY)const;
 	[[nodiscard]] glm::vec4 ScreenToNdc(float posX, float posY)const;
 	cMainWindow(const cMainWindow& tw) = delete;

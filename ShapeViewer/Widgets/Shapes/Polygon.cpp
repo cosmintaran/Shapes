@@ -2,72 +2,40 @@
 #include "Polygon.h"
 #include <algorithm>
 #include "Widgets/Shapes/Polygon.h"
-#include "Widgets/Layer.h"
 #include <poly2tri.h>
-#include <unordered_map>
 #include <algorithm>
+#include "Widgets/ILayer.h"
 
 namespace SV::GS {
-	Polygon::Polygon()
-		:IShape(nullptr)
-	{
-	}
 
-	Polygon::Polygon(const Layer* layer)
+	Polygon::Polygon(const ILayer* layer)
 		:IShape(layer)
 	{
 
 	}
 
-	Polygon::Polygon(const Layer* layer,const std::vector<glm::vec3>& vertices)
-		:IShape(layer,vertices)
-	{
-		if (layer == nullptr) throw "Null layer is not allowed!";
+	//Polygon::Polygon(const ILayer* layer,const std::vector<glm::vec3>& vertices)
+	//	:IShape(layer)
+	//{
+	//	if (layer == nullptr) throw "Null layer is not allowed!";
 
-		Triangulate();
-		CalculateBoundingBox();
-	}
-
-	void Polygon::Draw(DeviceContext& context)const
-	{
-		context.DrawPolygon(_vertices, _indecies);
-
-		if(_isOutlined)
-			context.DrawLine(_vertices, _layer->GetOutlineColor());
-	}
-
-	void Polygon::AddVertex(double x, double y, double z)
-	{
-		Vertex v;
-		v.Position = glm::vec3(x, y, z);
-		v.Color = _layer? _layer->GetColor() : glm::vec4(1.0f);
-		//v.TextCoords = glm::vec2(0.0f, 0.0f);
-		//v.TextId = 0.0f;
-		_vertices.emplace_back(std::move(v));
-		CalculateBoundingBox();
-	}
-
-	void Polygon::InsertVertexAt(uint32_t index, double x, double y, double z)
-	{
-		if (index > _vertices.size())
-			AddVertex(x, y, z);
-
-		Vertex v;
-		v.Position = glm::vec3(x, y, z);
-		v.Color = _layer ? _layer->GetColor() : glm::vec4(1.0f);
-		//v.TextCoords = glm::vec2(0.0f, 0.0f);
-		//v.TextId = 0.0f;
-		_vertices.insert(_vertices.begin()+index,std::move(v));
-
-		CalculateBoundingBox();
-	}
+	//	for (auto& vert : vertices)
+	//	{
+	//		Vertex v;
+	//		v.Position = vert;
+	//		v.Color = layer ? layer->GetColor() : glm::vec4(1.0f);
+	//		_vertices.emplace_back(std::move(v));
+	//	}
+	//	Triangulate();
+	//	CalculateBoundingBox();
+	//}
 
 	void Polygon::Triangulate()
 	{
 		std::vector<p2t::Point*> polyline;
 
-		for (auto& p : _vertices) {
-			auto pt = new p2t::Point(p.Position.x, p.Position.y);
+		for (size_t i = 0; i < _vertices.size() - 1; ++i) {
+			auto pt = new p2t::Point(_vertices[i].Position.x, _vertices[i].Position.y);
 			polyline.push_back(pt);
 		}
 
@@ -102,15 +70,15 @@ namespace SV::GS {
 		}
 	}
 	
-	void Polygon::CalculateBoundingBox()
-	{
-		std::for_each(_vertices.cbegin(), _vertices.cend(), [&](const Vertex& vertex)
-			{
-				_boundingBox.xMax = std::max((double)vertex.Position.x, _boundingBox.xMax);
-				_boundingBox.yMax = std::max((double)vertex.Position.y, _boundingBox.yMax);
+	//void Polygon::CalculateBoundingBox()
+	//{
+	//	std::for_each(_vertices.cbegin(), _vertices.cend(), [&](const Vertex& vertex)
+	//		{
+	//			_boundingBox.MaxX = std::max((double)vertex.Position.x, _boundingBox.MaxX);
+	//			_boundingBox.MaxY = std::max((double)vertex.Position.y, _boundingBox.MaxY);
 
-				_boundingBox.xMin = std::min((double)vertex.Position.x, _boundingBox.xMin);
-				_boundingBox.yMin = std::min((double)vertex.Position.y, _boundingBox.yMin);
-			});
-	}
+	//			_boundingBox.MinX = std::min((double)vertex.Position.x, _boundingBox.MinX);
+	//			_boundingBox.MinY = std::min((double)vertex.Position.y, _boundingBox.MinY);
+	//		});
+	//}
 }

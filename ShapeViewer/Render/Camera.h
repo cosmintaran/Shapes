@@ -20,7 +20,7 @@ namespace SV::GS{
 		[[nodiscard]] const glm::mat4& GetProjectionMatrix()const { return m_ProjectionMatrix; }
 		[[nodiscard]] const glm::mat4& GetViewMatrix()const { return m_ViewMatrix; }
 		[[nodiscard]] const glm::mat4& GetViewProjectionMatrix()const { return m_ViewProjectionMatrix; }
-		[[nodiscard]] glm::mat4 GetInvercedViewProjection()const { return glm::inverse(m_ProjectionMatrix); }
+		[[nodiscard]] glm::mat4 GetInversProjection()const { return glm::inverse(m_ProjectionMatrix); }
 
 	private:
 		void RecalculateViewMatrix();
