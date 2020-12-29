@@ -34,10 +34,9 @@ private:
 	std::vector<SV::GS::ILayer*> _layers;
 	float _zoomLevel = 1.0f;
 	bool _isDragged = false;
-	const float _cameraMoveSpeed = 1.0f;
-	float _aspectRatio;
+	const float _cameraMoveSpeed = 2.0f;
 	glm::vec3 _cameraPosition{0.0f};
-	glm::ivec2 _lastMousePosition;
+	glm::vec3 _lastMousePosition;
 	SV::Envelope _envelope;
 
 	wxMenuBar* m_pMenuBar = nullptr;
@@ -58,8 +57,8 @@ private:
 	void OnKeyUp(wxKeyEvent& event);
 	void OnMenuOpenCmd(wxCommandEvent& WXUNUSED(event));
 	void OnClose(wxCloseEvent& event);
-	[[nodiscard]] glm::vec4 ScreenToClipSpace(float posX, float posY)const;
-	[[nodiscard]] glm::vec4 ScreenToNdc(float posX, float posY)const;
+	[[nodiscard]] glm::vec3 ScreenToClipSpace(float posX, float posY)const;
+	[[nodiscard]] glm::vec3 ScreenToNdc(float posX, float posY)const;
 	cMainWindow(const cMainWindow& tw) = delete;
 	cMainWindow(cMainWindow&& tw) = delete;
 	cMainWindow& operator=(const cMainWindow& tw) = delete;

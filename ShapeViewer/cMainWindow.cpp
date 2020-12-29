@@ -11,15 +11,15 @@ END_EVENT_TABLE()
 
 
 cMainWindow::cMainWindow(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-	:wxFrame(parent, id, title, pos, size, style, name), _aspectRatio(0.0f)
+	:wxFrame(parent, id, title, pos, size, style, name)
 {
-	_envelope.MaxX =  1.0;
-	_envelope.MaxY =  1.0;
-	_envelope.MinX = -1.0;
+	_envelope.MaxX = size.GetWidth() / size.GetHeight();
+	_envelope.MaxY = 1.0;
+	_envelope.MinX = -(size.GetWidth() / size.GetHeight());
 	_envelope.MinY = -1.0;
 	InitializeUIComponents(size);
 
-	
+
 }
 
 void cMainWindow::InitializeUIComponents(const wxSize& size)
@@ -46,16 +46,14 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 	CreateStatusBar(4);
 	SetStatusText(wxT("0.00000 0.00000 "), 0);
 	SetStatusText(wxT("                "), 2);
-	auto m_statusbar = this->GetStatusBar();
-	wxRect rect;
-	m_statusbar->GetFieldRect(3, rect);
-	m_statusbar->Fit();
+	//auto m_statusbar = this->GetStatusBar();
+	//wxRect rect;
+	//m_statusbar->GetFieldRect(3, rect);
+	//m_statusbar->Fit();
 
-	 gauge = new wxGauge(m_statusbar, wxID_ANY, 100, rect.GetPosition(), rect.GetSize(), wxGA_SMOOTH);
-	_aspectRatio = ((float)size.GetWidth() / (float)size.GetHeight());
-	float bottom = ((_envelope.MaxX - _envelope.MinX) * 0.5) * _aspectRatio * _zoomLevel;
-	float top = ((_envelope.MaxY - _envelope.MinY) * 0.5) * _aspectRatio * _zoomLevel;
-	_camera = std::make_unique<SV::GS::OrotographicCamera>(-bottom, bottom, -top, top, -1.0f, 10.0f);
+	//gauge = new wxGauge(m_statusbar, wxID_ANY, 100, rect.GetPosition(), rect.GetSize(), wxGA_SMOOTH);
+
+	_camera = std::make_unique<SV::GS::OrotographicCamera>(_envelope.MinX * _zoomLevel, _envelope.MaxX * _zoomLevel, _envelope.MinY * _zoomLevel,_envelope.MaxY * _zoomLevel,  -1.0f, 10.0f);
 	_canvas = new SV::GS::DeviceContext(this, Window::ID::GLCONTEXT, nullptr, { 0, 0 }, size);
 
 	Fit();
@@ -71,7 +69,6 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 	_canvas->Bind(wxEVT_KEY_UP, &cMainWindow::OnKeyUp, this);
 }
 
-
 cMainWindow::~cMainWindow()
 {
 	for (auto& l : _layers) {
@@ -80,7 +77,6 @@ cMainWindow::~cMainWindow()
 	}
 	_layers.clear();
 }
-
 
 void cMainWindow::vPaint(SV::CORE::Timestep ts)
 {
@@ -131,42 +127,50 @@ void cMainWindow::Paint()
 
 void cMainWindow::OnScroll(wxMouseEvent& event)
 {
-	float zoomLevel = (float)(_zoomLevel - (float)event.GetWheelRotation() * 0.0016 * _zoomLevel);
-
-	const glm::vec4 beforeZoom = ScreenToClipSpace(event.GetX(), event.GetY());
+	float zoomLevel = (float)(_zoomLevel - (float)event.GetWheelRotation() * 0.0015 * _zoomLevel);
+	
+	if (zoomLevel <= 0.00001 || zoomLevel > 10) return;
 	_zoomLevel = zoomLevel;
 
-	const float left = static_cast<float>((float)_envelope.MinX / _zoomLevel);
-	const float bottom = static_cast<float>((float)_envelope.MinY / _zoomLevel);
-	const float right = static_cast<float>(_envelope.MaxX * _aspectRatio * _zoomLevel);
-	const float top = static_cast<float>(_envelope.MaxY * _aspectRatio * _zoomLevel);
+	const glm::vec3 beforeZoom = ScreenToClipSpace(event.GetX(), event.GetY());
+
+	const float translateX = ((_envelope.MaxX - _envelope.MinX) * 0.5f) + _envelope.MinX;
+	const float translateY = ((_envelope.MaxY - _envelope.MinY) * 0.5f) +_envelope.MinY;
+
+	const float left = ((_envelope.MinX - translateX) * _zoomLevel) + translateX;
+	const float right = ((_envelope.MaxX - translateX) * _zoomLevel) + translateX;
+
+	const float bottom = ((_envelope.MinY - translateY) * _zoomLevel) + translateY;
+	const float top = ((_envelope.MaxY  - translateY) * _zoomLevel) + translateY;
+
 	_camera->SetProjection(left, right, bottom, top);
 
-	//const glm::vec4 afterZoom = ScreenToClipSpace(event.GetX(), event.GetY());
-	//const glm::vec4 diff = beforeZoom - afterZoom;
-	//_camera->SetPosition(_camera->GetPosition() + glm::vec3(diff.x, diff.y, 0.0f));
+	const glm::vec3 afterZoom = ScreenToClipSpace(event.GetX(), event.GetY());
+
+	_camera->SetPosition(_camera->GetPosition() + (beforeZoom - afterZoom));
 }
 
 void cMainWindow::OnSize(wxSizeEvent& event)
 {
 	wxFrame::OnSize(event);
-	_aspectRatio = (float)event.GetSize().GetWidth() / (float)event.GetSize().GetHeight();
 	_canvas->Resize(event.GetSize());
-	_camera->SetProjection((_aspectRatio * _envelope.MinX * _zoomLevel), (_aspectRatio * _envelope.MaxX * _zoomLevel), _envelope.MinY * _zoomLevel, _envelope.MaxY * _zoomLevel);
-
 }
 
 void cMainWindow::OnLeftMouseBttDown(wxMouseEvent& event)
 {
 	wxSetCursor(wxCursor(wxCURSOR_HAND));
 	_isDragged = true;
-	event.GetPosition(&_lastMousePosition.x, &_lastMousePosition.y);
+	_lastMousePosition = ScreenToClipSpace(event.GetX(), event.GetY());
 }
 
 void cMainWindow::OnLeftMouseBttUp(wxMouseEvent& event)
 {
-	wxSetCursor(wxCursor(wxCURSOR_ARROW));
-	_isDragged = false;
+	if (_isDragged) {
+		wxSetCursor(wxCursor(wxCURSOR_ARROW));
+		_isDragged = false;
+		_lastMousePosition.x = 0;
+		_lastMousePosition.y = 0;
+	}
 }
 
 void cMainWindow::OnRightMouseBttUp(wxMouseEvent& event)
@@ -180,7 +184,7 @@ void cMainWindow::OnRightMouseBttUp(wxMouseEvent& event)
 
 void cMainWindow::OnMouseMove(wxMouseEvent& event)
 {
-	const glm::vec4 coordinates = ScreenToClipSpace(event.GetX(), event.GetY());
+	const glm::vec3 coordinates = ScreenToClipSpace(event.GetX(), event.GetY());
 	SetStatusText(wxString::Format(wxT("%f %f"), coordinates.x, coordinates.y), 0);
 
 	if (_isDragged == false) return;
@@ -191,25 +195,29 @@ void cMainWindow::OnMouseMove(wxMouseEvent& event)
 		long x = 0, y = 0;
 		event.GetPosition(&x, &y);
 
-		const float deltaX = x - _lastMousePosition.x;
-		const float deltaY = y - _lastMousePosition.y;
+		const glm::vec3 currentMousePosition = ScreenToClipSpace(x, y);
+		const glm::vec3 delta = currentMousePosition - _lastMousePosition;
+		//const float deltaX = x - _lastMousePosition.x;
+		//const float deltaY = y - _lastMousePosition.y;
 
-		const float ratio = _aspectRatio * _zoomLevel;
-		_cameraPosition.x += ((ratio * deltaX) / this->GetSize().GetWidth()) * -1;
-		_cameraPosition.y += ((ratio * deltaY) / this->GetSize().GetHeight());
+		//_cameraPosition.x -= (_zoomLevel * deltaX); /// this->GetSize().GetWidth());
+		//_cameraPosition.y += (_zoomLevel * deltaY); /// this->GetSize().GetHeight());
 
+		_cameraPosition.x -= delta.x;
+		_cameraPosition.y += delta.y;
 		_camera->SetPosition(_cameraPosition);
+		_lastMousePosition = currentMousePosition;
 
-		_lastMousePosition.x = x;
-		_lastMousePosition.y = y;
+		//_lastMousePosition.x = x;
+		//_lastMousePosition.y = y;
 	}
 }
 
 void cMainWindow::OnScrollMouseDoubleClicked(wxMouseEvent& event)
 {
 	_zoomLevel = 1.0f;
-	_camera->SetProjection((_aspectRatio * _envelope.MinX * _zoomLevel), (_aspectRatio * _envelope.MaxX * _zoomLevel), _envelope.MinY * _zoomLevel, _envelope.MaxY * _zoomLevel);
-	_cameraPosition = glm::vec3((_aspectRatio * _envelope.MaxX - _aspectRatio * _envelope.MinX) *0.5, (_envelope.MaxY - _envelope.MinY) * 0.5, 0.0f);
+	_camera->SetProjection(_envelope.MinX,_envelope.MaxX, _envelope.MinY, _envelope.MaxY);
+	_cameraPosition = glm::vec3(0.0f);
 	_camera->SetPosition(_cameraPosition);
 }
 
@@ -249,35 +257,24 @@ void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 
 		SetStatusText(wxT("Loading shp file"), 3);
 
-		for (int i = 0; i < 100; ++i) {
-			//if (!dialog.Update(i)) {
-			//	// Cancelled by user.
-			//	break;
-			//}
-
-		}
-
 		SV::GS::EsriShpLayer* lay = new SV::GS::EsriShpLayer(openFileDialog.GetFilename().c_str().AsChar(), openFileDialog.GetPath().c_str().AsChar(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.0f, 0.0f, 0.8f));
-		gauge->Pulse();
+	/*	gauge->Pulse();*/
 		if (lay->ReadShapeFile()) {
-			if (_layers.size() == 0){
+			if (_layers.size() == 0) {
 				_envelope = lay->GetEnvelope();
-				_zoomLevel = 1.0f;
 
-				const float left   = static_cast<float>(_envelope.MinX * _zoomLevel);
-				const float bottom = static_cast<float>(_envelope.MinY * _zoomLevel);
-				const float right  = static_cast<float>(_envelope.MaxX * _aspectRatio * _zoomLevel);
-				const float top    = static_cast<float>(_envelope.MaxY * _aspectRatio * _zoomLevel);
-				_camera->SetProjection(left, right, bottom, top);
-				_cameraPosition = glm::vec3((right-left) *0.5, (top-bottom)*0.5, 0.0f);
+				_zoomLevel = 1.0f;
+				_camera->SetProjection(_envelope.MinX, _envelope.MaxX, _envelope.MinY, _envelope.MaxY);
+				_cameraPosition = glm::vec3(0.0f);
 				_camera->SetPosition(_cameraPosition);
+
 			}
 			_layers.push_back(lay);
 		}
 	}
 
 	SetStatusText(wxT(""), 3);
-	gauge->SetValue(0);
+	/*gauge->SetValue(0);*/
 }
 
 void cMainWindow::OnClose(wxCloseEvent& event)
@@ -291,16 +288,16 @@ void cMainWindow::OnClose(wxCloseEvent& event)
 	event.Skip();
 }
 
-glm::vec4 cMainWindow::ScreenToClipSpace(float posX, float posY) const
+glm::vec3 cMainWindow::ScreenToClipSpace(float posX, float posY) const
 {
-	const glm::vec4 ndcCoords = ScreenToNdc(posX, posY);
-	const glm::vec4 translatedNDC(_camera->GetPosition().x, _camera->GetPosition().y, 0.0f, 0.0f);
-	const glm::vec4 coords = _camera->GetInversProjection() * ndcCoords;
-	return coords + translatedNDC;
+	glm::vec3 projected(posX, posY, 0.0f);
+	glm::vec4 viewport(0, 0, (float)GetSize().GetWidth(), (float)GetSize().GetHeight());
+	glm::vec3 coords = glm::unProject(projected, glm::mat4(1.0f), _camera->GetProjectionMatrix(), viewport);
+	return coords;
 }
 
-glm::vec4 cMainWindow::ScreenToNdc(float posX, float posY) const
+glm::vec3 cMainWindow::ScreenToNdc(float posX, float posY) const
 {
-	const glm::vec4 ndcCoords(posX / (GetSize().GetWidth() * 0.5f) - 1, (GetSize().GetHeight() - posY) / (GetSize().GetHeight() * 0.5f) - 1, 0.0f, 0.0f);
+	const glm::vec3 ndcCoords(posX / (GetSize().GetWidth() * 0.5f) - 1, (GetSize().GetHeight() - posY) / (GetSize().GetHeight() * 0.5f) - 1, 0.0f);
 	return ndcCoords;
 }

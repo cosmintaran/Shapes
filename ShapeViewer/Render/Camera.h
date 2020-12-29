@@ -10,6 +10,7 @@ namespace SV::GS{
 	public:
 		OrotographicCamera(float left, float right, float bottom, float top, float nearest = -1.0f, float farest = 1000.0f);
 		void SetProjection(float left, float right, float bottom, float top);
+		void SetProjection(const glm::mat4& projection);
 
 		const glm::vec3& GetPosition()const { return m_Position; }
 		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix();}
