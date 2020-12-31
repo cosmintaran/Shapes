@@ -12,11 +12,11 @@ namespace SV::GS {
 		OGRPolygon _ogrPolygon;
 
 	public:
-		EsriShpPolygon(ILayer* layer, const OGRPolygon* polygon);
+		EsriShpPolygon(const ILayer* layer, OGRPolygon polygon);
 		~EsriShpPolygon();
-
+		void Read()override;
 	private:
-		void PrepareForDraw();
+		
 	};
 
 }

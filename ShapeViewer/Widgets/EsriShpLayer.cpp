@@ -1,12 +1,21 @@
 #include"stdafx.h"
 #include "EsriShpLayer.h"
 #include "Shapes/Polygon.h"
-#include <algorithm>
 #include "Render/DeviceContext.h"
 #include "core/Log.h"
 #include "Widgets/Shapes/EsriShpPolygon.h"
+#include <future>
 
 namespace SV::GS {
+
+	static std::mutex _mutex;
+
+	static void LoadShapesAsync(IShape* shp, std::vector<IShape*>* _shapes)
+	{
+		shp->Read();
+		std::lock_guard<std::mutex> locking(_mutex);
+		_shapes->push_back(shp);
+	}
 
 	EsriShpLayer::EsriShpLayer(const char* name, const char* path, glm::vec4 color, glm::vec4 outlineColor)
 		:ILayer(name, color, outlineColor)
@@ -26,10 +35,6 @@ namespace SV::GS {
 
 	}
 
-	void EsriShpLayer::AddShape(const std::vector<glm::vec3>& vertices)
-	{
-
-	}
 
 	bool EsriShpLayer::ReadShapeFile()
 	{
@@ -40,7 +45,7 @@ namespace SV::GS {
 			CAD_ERROR("Open file {0} failed.", _name);
 			return false;
 		}
-
+		//_futures.clear();
 		for (OGRLayer* poLayer : poDS->GetLayers()) {
 
 			for (const auto& poFeature : *poLayer)
@@ -48,8 +53,9 @@ namespace SV::GS {
 				const OGRGeometry* poGeometry = poFeature->GetGeometryRef();
 				if (poGeometry != nullptr
 					&& wkbFlatten(poGeometry->getGeometryType()) == wkbPolygon)
-				{
-					_shapes.push_back(new EsriShpPolygon(this, (OGRPolygon*)poGeometry));
+				{				
+					EsriShpPolygon* shp = new EsriShpPolygon(this, *(OGRPolygon*)poGeometry);
+					_futures.push_back(std::async(std::launch::async, LoadShapesAsync,shp, &_shapes));
 				}
 				else if (poGeometry != NULL)
 				{
@@ -70,7 +76,7 @@ namespace SV::GS {
 			_envelope.MaxY = std::max(env.MaxY, _envelope.MaxY);
 			_envelope.MinY = std::min(env.MinY, _envelope.MinY);
 		}
-		
+
 		//auto  proj_string = poLayer->GetSpatialRef()->GetAttrValue("PROJCS", 0);
 		////# geographic coordinate system
 		//auto geog_string = poLayer->GetSpatialRef()->GetAttrValue("GEOGCS", 0);
@@ -81,5 +87,4 @@ namespace SV::GS {
 		//auto x = poLayer->GetSpatialRef();
 		return true;
 	}
-
 }

@@ -18,8 +18,6 @@ cMainWindow::cMainWindow(wxWindow* parent, wxWindowID id, const wxString& title,
 	_envelope.MinX = -(size.GetWidth() / size.GetHeight());
 	_envelope.MinY = -1.0;
 	InitializeUIComponents(size);
-
-
 }
 
 void cMainWindow::InitializeUIComponents(const wxSize& size)
@@ -263,8 +261,19 @@ void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 			if (_layers.size() == 0) {
 				_envelope = lay->GetEnvelope();
 
-				_zoomLevel = 1.0f;
-				_camera->SetProjection(_envelope.MinX, _envelope.MaxX, _envelope.MinY, _envelope.MaxY);
+				_zoomLevel = 1.2f;
+
+				const float translateX = ((_envelope.MaxX - _envelope.MinX) * 0.5f) + _envelope.MinX;
+				const float translateY = ((_envelope.MaxY - _envelope.MinY) * 0.5f) + _envelope.MinY;
+
+				const float left = ((_envelope.MinX - translateX) * _zoomLevel) + translateX;
+				const float right = ((_envelope.MaxX - translateX) * _zoomLevel) + translateX;
+
+				const float bottom = ((_envelope.MinY - translateY) * _zoomLevel) + translateY;
+				const float top = ((_envelope.MaxY - translateY) * _zoomLevel) + translateY;
+
+				_camera->SetProjection(left, right, bottom, top);
+				_camera->SetProjection(left, right, bottom, top);
 				_cameraPosition = glm::vec3(0.0f);
 				_camera->SetPosition(_cameraPosition);
 

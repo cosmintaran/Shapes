@@ -28,7 +28,7 @@ namespace SV::GS {
 		void SetOutline(bool value) { _isOutlined = value; }
 		void SetSelected(bool value) { _isSelected = value; }
 		bool IsOutlined()const { return _isOutlined; }
-
+		virtual void Read(){ }
 	protected:
 		IShape(const ILayer* layer);		
 	};

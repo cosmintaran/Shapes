@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <string>
 #include <glm/vec4.hpp>
 #include "Shapes/IShape.h"
 #include "Shapes/ShpTypes.h"

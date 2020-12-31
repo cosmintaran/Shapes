@@ -1,26 +1,25 @@
 #include "stdafx.h"
 #include "EsriShpPolygon.h"
 #include "../EsriShpLayer.h"
+#include "core/Log.h"
 
 namespace SV::GS
 {
 
-	EsriShpPolygon::EsriShpPolygon(ILayer* layer, const OGRPolygon* polygon)
+	EsriShpPolygon::EsriShpPolygon(const ILayer* layer, OGRPolygon polygon)
 		:Polygon(layer)
-		, _ogrPolygon(*polygon)
+		, _ogrPolygon(polygon)
 	{
-		PrepareForDraw();
+		
 	}
 
 
-	EsriShpPolygon::~EsriShpPolygon()
-	{
+	EsriShpPolygon::~EsriShpPolygon()	{
 
 	}
 
-	void EsriShpPolygon::PrepareForDraw()
+	void EsriShpPolygon::Read()
 	{
-
 		int NumberOfInnerRings = _ogrPolygon.getNumInteriorRings();
 		OGRLinearRing* poExteriorRing = _ogrPolygon.getExteriorRing();
 		int NumberOfExteriorRingVertices = poExteriorRing->getNumPoints();
@@ -39,7 +38,6 @@ namespace SV::GS
 			v.Color = _layer ? _layer->GetColor() : glm::vec4(1.0f);
 			_vertices.emplace_back(std::move(v));
 		}
-
-		Triangulate();
+        PolyPart_Triangulate();
 	}
 }

@@ -1,10 +1,12 @@
-#include"stdafx.h"
+#include "stdafx.h"
 #include "Polygon.h"
-#include <algorithm>
+#include "Widgets/ILayer.h"
 #include "Widgets/Shapes/Polygon.h"
 #include <poly2tri.h>
-#include <algorithm>
-#include "Widgets/ILayer.h"
+
+#include "core/Log.h"
+#include <polypartition.h>
+#include <iostream>
 
 namespace SV::GS {
 
@@ -14,24 +16,7 @@ namespace SV::GS {
 
 	}
 
-	//Polygon::Polygon(const ILayer* layer,const std::vector<glm::vec3>& vertices)
-	//	:IShape(layer)
-	//{
-	//	if (layer == nullptr) throw "Null layer is not allowed!";
-
-	//	for (auto& vert : vertices)
-	//	{
-	//		Vertex v;
-	//		v.Position = vert;
-	//		v.Color = layer ? layer->GetColor() : glm::vec4(1.0f);
-	//		_vertices.emplace_back(std::move(v));
-	//	}
-	//	Triangulate();
-	//	CalculateBoundingBox();
-	//}
-
-	void Polygon::Triangulate()
-	{
+	void Polygon::Triangulate() {
 		std::vector<p2t::Point*> polyline;
 
 		for (size_t i = 0; i < _vertices.size() - 1; ++i) {
@@ -45,23 +30,20 @@ namespace SV::GS {
 
 		_indecies.reserve(rez.size() * 3);
 		std::for_each(rez.cbegin(), rez.cend(), [&](p2t::Triangle* trig) {
-
 			std::array<p2t::Point*, 3> triangle{
 				trig->GetPoint(0),
 				trig->GetPoint(1),
 				trig->GetPoint(2)
 			};
-			
+
 			unsigned int i = 0;
 
-			for (size_t i = 0; i < triangle.size(); i++)
-			{
+			for (size_t i = 0; i < triangle.size(); i++) {
 				auto findIt = std::find(polyline.cbegin(), polyline.cend(), triangle[i]);
 				if (findIt == polyline.cend())
 					throw "Triangulation failed";
 				_indecies.push_back(static_cast<unsigned int>(polyline.size() - (polyline.cend() - findIt)));
 			}
-
 			});
 
 		delete cdt;
@@ -69,16 +51,32 @@ namespace SV::GS {
 			delete polyline[i];
 		}
 	}
-	
-	//void Polygon::CalculateBoundingBox()
-	//{
-	//	std::for_each(_vertices.cbegin(), _vertices.cend(), [&](const Vertex& vertex)
-	//		{
-	//			_boundingBox.MaxX = std::max((double)vertex.Position.x, _boundingBox.MaxX);
-	//			_boundingBox.MaxY = std::max((double)vertex.Position.y, _boundingBox.MaxY);
 
-	//			_boundingBox.MinX = std::min((double)vertex.Position.x, _boundingBox.MinX);
-	//			_boundingBox.MinY = std::min((double)vertex.Position.y, _boundingBox.MinY);
-	//		});
-	//}
-}
+	void Polygon::PolyPart_Triangulate() {
+
+		TPPLPartition pp;
+		TPPLPoly poly;
+		std::list<TPPLPoly> polyList, result;
+
+		poly.Init(_vertices.size());
+		for (size_t i = 0; i < _vertices.size(); ++i) {
+		    poly[i].x = _vertices[i].Position.x;
+		    poly[i].y = _vertices[i].Position.y;
+			poly[i].id = i;
+		}
+		poly.SetOrientation(TPPL_CCW);
+		polyList.push_back(poly);
+
+		pp.Triangulate_EC(&polyList, &result);
+
+		for (auto p : result) {
+			const int noOfPoints = p.GetNumPoints();
+			if (noOfPoints > 3) continue; // not a triangle
+
+			for (int i = 0; i < noOfPoints; ++i) {
+				_indecies.push_back(static_cast<unsigned int>(p.GetPoint(i).id));
+			}
+		}
+	
+	}
+} // namespace SV::GS
