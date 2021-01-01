@@ -3,12 +3,11 @@
 
 namespace SV::GS {
 
-	void ILayer::Draw(DeviceContext& context)
+	void ILayer::Draw(DeviceContext& deviceContext)
 	{
 		if (!_isVisible) return;
-
 		for (size_t i = 0; i < _shapes.size(); ++i) {
-			_shapes[i]->Draw(context);
+			_shapes[i]->vDraw(deviceContext);
 		}
 	}
 

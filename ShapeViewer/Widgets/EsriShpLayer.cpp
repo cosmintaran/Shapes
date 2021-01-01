@@ -45,7 +45,7 @@ namespace SV::GS {
 			CAD_ERROR("Open file {0} failed.", _name);
 			return false;
 		}
-		//_futures.clear();
+
 		for (OGRLayer* poLayer : poDS->GetLayers()) {
 
 			for (const auto& poFeature : *poLayer)
@@ -53,9 +53,9 @@ namespace SV::GS {
 				const OGRGeometry* poGeometry = poFeature->GetGeometryRef();
 				if (poGeometry != nullptr
 					&& wkbFlatten(poGeometry->getGeometryType()) == wkbPolygon)
-				{				
+				{
 					EsriShpPolygon* shp = new EsriShpPolygon(this, *(OGRPolygon*)poGeometry);
-					_futures.push_back(std::async(std::launch::async, LoadShapesAsync,shp, &_shapes));
+					_futures.emplace_back(std::thread(LoadShapesAsync, shp, &_shapes));
 				}
 				else if (poGeometry != NULL)
 				{
@@ -77,14 +77,14 @@ namespace SV::GS {
 			_envelope.MinY = std::min(env.MinY, _envelope.MinY);
 		}
 
-		//auto  proj_string = poLayer->GetSpatialRef()->GetAttrValue("PROJCS", 0);
-		////# geographic coordinate system
-		//auto geog_string = poLayer->GetSpatialRef()->GetAttrValue("GEOGCS", 0);
-		////# EPSG Code if available
-		//auto epsg = poLayer->GetSpatialRef()->GetAttrValue("AUTHORITY", 1);
-		////# datum 
-		//auto datum = poLayer->GetSpatialRef()->GetAttrValue("DATUM", 0);
-		//auto x = poLayer->GetSpatialRef();
+		for (auto& e : _futures) {
+			e.join();
+		}
+
+		for (auto& sh : _shapes) {
+			sh->GraphicsInitialization();
+		}
+
 		return true;
 	}
 }

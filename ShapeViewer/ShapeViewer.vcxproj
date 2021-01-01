@@ -188,6 +188,7 @@ xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configurat
     <ClInclude Include="core\Id.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\DeviceContext.h" />
+    <ClInclude Include="Render\IRenderShape.h" />
     <ClInclude Include="Render\OpenGLDebug.h" />
     <ClInclude Include="Render\RenderData.h" />
     <ClInclude Include="Render\Shader.h" />

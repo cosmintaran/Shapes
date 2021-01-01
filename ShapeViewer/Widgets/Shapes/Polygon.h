@@ -13,4 +13,4 @@ namespace SV::GS {
 		void PolyPart_Triangulate();
 	};
 
-} // namespace SV::GS
+}

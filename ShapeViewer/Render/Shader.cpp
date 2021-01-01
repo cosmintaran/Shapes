@@ -58,7 +58,7 @@ namespace SV::GS{
 		return shader;
 	}
 
-	int Shader::GetUniformLocation(const char* uniformName)
+	int Shader::GetUniformLocation(const char* uniformName)const
 	{
 		auto it = _uniformsCache.find(uniformName);
 		if (it != _uniformsCache.end())

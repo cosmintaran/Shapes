@@ -12,8 +12,8 @@ namespace SV::GS{
 		
 		~Shader();
 
-		GLuint GetRendererID() { return m_RendererID; }
-		int GetUniformLocation(const char* uniformName);
+		GLuint GetRendererID()const { return m_RendererID; }
+		int GetUniformLocation(const char* uniformName)const;
 
 		static Shader* FromGLSLTextFiles(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 
@@ -24,6 +24,6 @@ namespace SV::GS{
 		GLuint CompileShader(GLenum type, const std::string & source);
 	private:
 		GLuint m_RendererID = 0;
-		std::unordered_map<const char*, int> _uniformsCache;
+		mutable std::unordered_map<const char*, int> _uniformsCache;
 	};
 }

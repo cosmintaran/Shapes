@@ -81,6 +81,9 @@
     <ClInclude Include="..\Vendors\polypartition\polypartition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Render\IRenderShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cApp.cpp">

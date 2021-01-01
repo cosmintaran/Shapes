@@ -42,6 +42,7 @@ private:
     LARGE_INTEGER finalTimeFPS;
     LARGE_INTEGER frequency;
     int frameCount = 0;
+    bool _isDataLoading = false;
 
     wxMenuBar* m_pMenuBar = nullptr;
     wxMenu* m_pFileMenu = nullptr;

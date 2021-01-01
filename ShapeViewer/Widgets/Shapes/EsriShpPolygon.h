@@ -15,6 +15,7 @@ namespace SV::GS {
 		EsriShpPolygon(const ILayer* layer, OGRPolygon polygon);
 		~EsriShpPolygon();
 		void Read()override;
+		void vDraw(DeviceContext& deviceContext)const override ; 
 	private:
 		
 	};

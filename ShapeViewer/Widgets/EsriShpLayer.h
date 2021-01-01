@@ -11,7 +11,7 @@ namespace SV::GS {
 	private:
 		std::string _shapePath;
 		GDALDatasetUniquePtr poDS;
-		std::vector<std::future<void>> _futures;
+		std::vector<std::thread> _futures;
 
 	public:
 		EsriShpLayer(const char* name, const char* path, glm::vec4 color, glm::vec4 outlineColor = glm::vec4(1.0f));

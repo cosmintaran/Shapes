@@ -31,7 +31,7 @@ namespace SV::GS {
 		bool IsDirty()const { return _isDirty; }
 		void SetIsDirty(bool value) { _isDirty = value; }
 		[[nodiscard]] virtual const Envelope& GetEnvelope()const { return _envelope; }
-		virtual void Draw(DeviceContext& context);
+		virtual void Draw(DeviceContext& deviceContext);
 		virtual ~ILayer();
 
 

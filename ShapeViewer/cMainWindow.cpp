@@ -82,7 +82,7 @@ cMainWindow::~cMainWindow()
 
 void cMainWindow::vPaint(SV::CORE::Timestep ts)
 {
-    if (_canvas == nullptr || !IsShownOnScreen()) return;
+    if (_canvas == nullptr || _isDataLoading ||  !IsShownOnScreen()) return;
 
     bool isPoisitionChanged = false;
 
@@ -268,6 +268,7 @@ void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 
     if (openFileDialog.ShowModal() == wxID_OK) {
 
+        _isDataLoading = true;
         SetStatusText(wxT("Loading shp file"), 3);
 
         SV::GS::EsriShpLayer* lay = new SV::GS::EsriShpLayer(openFileDialog.GetFilename().c_str().AsChar(), openFileDialog.GetPath().c_str().AsChar(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.0f, 0.0f, 0.8f));
@@ -294,6 +295,7 @@ void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 
             }
             _layers.push_back(lay);
+            _isDataLoading = false;
         }
     }
 

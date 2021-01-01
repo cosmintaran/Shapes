@@ -7,7 +7,6 @@ namespace SV::GS {
 
 	struct Vertex {
 		glm::vec3 Position;
-		glm::vec4 Color;
 	};
 
 	struct TexVertex 

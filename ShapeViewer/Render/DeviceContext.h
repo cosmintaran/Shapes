@@ -9,7 +9,7 @@
 #include <Widgets/Shapes/Triangle.h>
 
 namespace SV::GS {
-	
+
 	class DeviceContext : public wxGLCanvas {
 
 	public:
@@ -23,18 +23,15 @@ namespace SV::GS {
 		void UpdateScene(const glm::mat4& _camera);
 		void ClearColor(const glm::vec4& color);
 		void EndScene();
-		void DrawPolygon(const std::vector<Vertex>& mesh, const std::vector<unsigned int>& _indecies, const glm::vec4& color);
-		void DrawLine(const std::vector<Vertex>& contour, const glm::vec4& color);
-		void DrawPolygon(const std::vector<Vertex>& mesh, const std::vector<unsigned int>& _indecies);
-		void DrawLine(const std::vector<Vertex>& contour);
-		void DrawTexture(/*Texture*/);
 		void Resize(const wxSize& size);
 
-	private:
+		void SetDrawColor(float r, float g, float b, float a)
+		{
+			int location = _shader->GetUniformLocation("u_Color");
+			glUniform4f(location, r,g,b,a);
+		}
 
-		RenderData<Vertex>* _polygonRenderData;
-		RenderData<Vertex>* _lineRenderData;
-		RenderData<TexVertex>* _texRenderData;
+	private:
 		std::unique_ptr<wxGLContext> m_context;
 		std::unique_ptr<Shader> _shader;
 		glm::mat4 _viewProjectionMatrix;
@@ -43,10 +40,6 @@ namespace SV::GS {
 
 		void InitializeGLAD();
 		void SetupPrimitiveGraphics();
-		void SetupTextureGraphics();
-		void BeginBatch();
-		void EndBatch();
-
 		DeviceContext(const DeviceContext& tc) = delete;
 		DeviceContext(DeviceContext&& tc) = delete;
 		DeviceContext& operator=(const DeviceContext& tc) = delete;

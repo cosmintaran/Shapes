@@ -9,13 +9,4 @@ namespace SV::GS {
 		, _layer(layer)
 	{
 	}
-
-	void IShape::Draw(DeviceContext& context) const
-	{
-		context.DrawPolygon(_vertices, _indecies);
-
-		if (_isOutlined)
-			context.DrawLine(_vertices, _layer->GetOutlineColor());
-	}
-
 }
