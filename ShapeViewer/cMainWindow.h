@@ -38,6 +38,10 @@ private:
 	glm::vec3 _cameraPosition{0.0f};
 	glm::vec3 _lastMousePosition;
 	SV::Envelope _envelope;
+	LARGE_INTEGER startTimeFPS;
+	LARGE_INTEGER finalTimeFPS;
+	LARGE_INTEGER frequency;
+	int frameCount = 0;
 
 	wxMenuBar* m_pMenuBar = nullptr;
 	wxMenu* m_pFileMenu = nullptr;

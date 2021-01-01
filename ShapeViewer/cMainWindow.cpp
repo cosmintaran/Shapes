@@ -65,6 +65,10 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 	_canvas->Bind(wxEVT_MOTION, &cMainWindow::OnMouseMove, this);
 	_canvas->Bind(wxEVT_MIDDLE_DCLICK, &cMainWindow::OnScrollMouseDoubleClicked, this);
 	_canvas->Bind(wxEVT_KEY_UP, &cMainWindow::OnKeyUp, this);
+
+	QueryPerformanceFrequency(&frequency);
+	QueryPerformanceCounter(&startTimeFPS);
+
 }
 
 cMainWindow::~cMainWindow()
@@ -78,7 +82,6 @@ cMainWindow::~cMainWindow()
 
 void cMainWindow::vPaint(SV::CORE::Timestep ts)
 {
-
 	if (_canvas == nullptr || !IsShownOnScreen()) return;
 
 	bool isPoisitionChanged = false;
@@ -107,6 +110,18 @@ void cMainWindow::vPaint(SV::CORE::Timestep ts)
 		_camera->SetPosition(_cameraPosition);
 
 	Paint();
+
+	QueryPerformanceCounter(&finalTimeFPS);
+	double deltaTime = ((double)finalTimeFPS.QuadPart - (double)startTimeFPS.QuadPart) / (double)frequency.QuadPart;
+	if (deltaTime >= 1)
+	{
+		SetStatusText(wxString::Format(wxT("FPS: %i"), (int)(frameCount / deltaTime)), 1);
+		startTimeFPS = finalTimeFPS;
+		frameCount = 0;
+	}
+	else {
+		++frameCount;
+	}
 }
 
 void cMainWindow::Paint()

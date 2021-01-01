@@ -7,7 +7,7 @@
 IMPLEMENT_APP(cApp)
 
 cApp::cApp()
-    :window(nullptr)
+    :window(nullptr),_lastFrameTime(0)
 {
 
 }
@@ -40,14 +40,14 @@ void cApp::onIdle(wxIdleEvent& evt)
 {
     LARGE_INTEGER time, fr;
     QueryPerformanceFrequency(&fr);
-    bool rez = QueryPerformanceCounter(&time);
-    SV::CORE::Timestep step(((double)time.QuadPart - (double) _lastFrameTime.QuadPart) /(double)fr.QuadPart);
-    _lastFrameTime = time;
-
+    QueryPerformanceCounter(&time);
+    
     if (render_loop_on)
     {
+        SV::CORE::Timestep step(((double)time.QuadPart - (double)_lastFrameTime.QuadPart) / (double)fr.QuadPart);
         window->vPaint(step);
         evt.RequestMore(); // render continuously, not only once on idle
+        _lastFrameTime = time;
     }
 }
 

@@ -15,7 +15,7 @@ namespace SV::GS {
 		m_context = std::make_unique<wxGLContext>(this);
 		SetCurrent(*m_context);
 		InitializeGLAD();
-		SetupPrimitiveGraphics();
+		SetupPrimitiveGraphics();		
 	}
 
 	DeviceContext::~DeviceContext()
@@ -50,20 +50,20 @@ namespace SV::GS {
 		glViewport(0, 0, width, height);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_DEPTH_TEST);
 
 		glLineWidth(1.35f);
 		glEnable(GL_PRIMITIVE_RESTART);
 		glPrimitiveRestartIndex(0xFFFF);
-
-
+		
 		CAD_INFO("OpenGl initializated");
 		CAD_INFO("OPENGL VERSION: {0}", (char*)glGetString(GL_VERSION));
 		CAD_INFO("SHADER VERSION: {0}", (char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+#if _DEBUG
 		SV::GS::SetGLDebugLogLevel(SV::GS::DebugLogLevel::Notification);
 		SV::GS::EnableGLDebugging();
+#endif
 
 	}
 
