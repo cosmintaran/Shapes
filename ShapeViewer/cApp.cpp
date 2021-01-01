@@ -7,9 +7,9 @@
 IMPLEMENT_APP(cApp)
 
 cApp::cApp()
-    :window(nullptr),_lastFrameTime(0)
+    :window(nullptr)
 {
-
+    _lastFrameTime.QuadPart = 0;
 }
 
 cApp::~cApp()
