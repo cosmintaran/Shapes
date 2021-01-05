@@ -94,16 +94,18 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition;$(BOOST)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_lib;$(GEOS)\Debug_x86;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"</Command>
+      <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"
+xcopy /Y/E/S/H "$(GEOS)\Debug_x86\geos.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y/E/S/H "$(GEOS)Debug_x86\geos_c.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -116,18 +118,20 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition;$(BOOST)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_lib;$(GEOS)\Release_x86;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"</Command>
+      <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"
+xcopy /Y/E/S/H "$(GEOS)\Release_x86\geos.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y/E/S/H "$(GEOS)\Release_x86\geos_c.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -138,18 +142,20 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition;$(BOOST)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_lib;$(GEOS)\Debug_x64;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"
-xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y/E/S/H "$(GEOS)\Debug_x64\geos.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y/E/S/H "$(GEOS)\Debug_x64\geos_c.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,7 +168,7 @@ xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configurat
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(WXWIN)\include;$(WXWIN)\include\msvc;$(SolutionDir)\Vendors\glm;$(SolutionDir)\Vendors\glad\include;$(SolutionDir)Vendors\spdlog\include;$(SolutionDir)Vendors\polyToTriang\poly2tri;$(GDAL)\include;$(SolutionDir)Vendors\polypartition;$(BOOST)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -170,12 +176,14 @@ xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configurat
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_lib;$(GEOS)\Release_x64;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"
-xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y/E/S/H "$(GEOS)\Release_x64\geos.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y/E/S/H "$(GEOS)\Release_x64\geos_c.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -188,20 +196,19 @@ xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configurat
     <ClInclude Include="core\Id.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\DeviceContext.h" />
-    <ClInclude Include="Render\IRenderShape.h" />
+    <ClInclude Include="Widgets\Drawable.h" />
     <ClInclude Include="Render\OpenGLDebug.h" />
     <ClInclude Include="Render\RenderData.h" />
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Widgets\Envelope.h" />
-    <ClInclude Include="Widgets\ILayer.h" />
+    <ClInclude Include="Widgets\Layer.h" />
     <ClInclude Include="Widgets\EsriShpLayer.h" />
-    <ClInclude Include="Widgets\Shapes\EsriShpPolygon.h" />
-    <ClInclude Include="Widgets\Shapes\IShape.h" />
+    <ClInclude Include="Widgets\Shapes\Shape.h" />
     <ClInclude Include="Widgets\Shapes\Polygon.h" />
     <ClInclude Include="Widgets\Shapes\ShpTypes.h" />
-    <ClInclude Include="Widgets\Shapes\Triangle.h" />
+    <ClInclude Include="xml\Cgxml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Vendors\polypartition\polypartition.cpp" />
@@ -218,11 +225,10 @@ xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configurat
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Widgets\ILayer.cpp" />
+    <ClCompile Include="Widgets\Layer.cpp" />
     <ClCompile Include="Widgets\EsriShpLayer.cpp" />
-    <ClCompile Include="Widgets\Shapes\EsriShpPolygon.cpp" />
-    <ClCompile Include="Widgets\Shapes\IShape.cpp" />
     <ClCompile Include="Widgets\Shapes\Polygon.cpp" />
+    <ClCompile Include="xml\Cgxml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vendors\glad\glad.vcxproj">

@@ -27,3 +27,6 @@
 
 #include <string>
 
+#include <ogrsf_frmts.h>
+#include <core/Log.h>
+#include <sstream>

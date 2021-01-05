@@ -31,7 +31,7 @@ public:
 private:
     SV::GS::DeviceContext* _canvas = nullptr;
     std::unique_ptr <SV::GS::OrotographicCamera> _camera;
-    std::vector<SV::GS::ILayer*> _layers;
+    std::vector<SV::Layer*> _layers;
     float _zoomLevel = 1.0f;
     bool _isDragged = false;
     const float _cameraMoveSpeed = 2.0f;

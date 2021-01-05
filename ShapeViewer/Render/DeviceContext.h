@@ -1,12 +1,9 @@
 #pragma once
 #include "OpenGLDebug.h"
-#include <memory> 
 #include <glm/vec4.hpp>
 #include "Render/RenderData.h"
 #include "Shader.h"
-
 #include "wx/glcanvas.h"
-#include <Widgets/Shapes/Triangle.h>
 
 namespace SV::GS {
 

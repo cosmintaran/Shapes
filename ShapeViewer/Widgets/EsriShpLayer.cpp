@@ -3,25 +3,20 @@
 #include "Shapes/Polygon.h"
 #include "Render/DeviceContext.h"
 #include "core/Log.h"
-#include "Widgets/Shapes/EsriShpPolygon.h"
+#include "Widgets/Shapes/Polygon.h"
 #include <future>
 
-namespace SV::GS {
+
+
+namespace SV {
 
 	static std::mutex _mutex;
 
-	static void LoadShapesAsync(IShape* shp, std::vector<IShape*>* _shapes)
-	{
-		shp->Read();
-		std::lock_guard<std::mutex> locking(_mutex);
-		_shapes->push_back(shp);
-	}
-
 	EsriShpLayer::EsriShpLayer(const char* name, const char* path, glm::vec4 color, glm::vec4 outlineColor)
-		:ILayer(name, color, outlineColor)
+		:Layer(name, color, outlineColor)
 		, _shapePath(path)
 	{
-
+		ReadShapeFile();
 	}
 
 	EsriShpLayer::~EsriShpLayer()
@@ -46,16 +41,25 @@ namespace SV::GS {
 			return false;
 		}
 
+		OGRGeometry* poGeometry = nullptr;
+
 		for (OGRLayer* poLayer : poDS->GetLayers()) {
 
 			for (const auto& poFeature : *poLayer)
 			{
-				const OGRGeometry* poGeometry = poFeature->GetGeometryRef();
+				poGeometry = poFeature->GetGeometryRef();
 				if (poGeometry != nullptr
 					&& wkbFlatten(poGeometry->getGeometryType()) == wkbPolygon)
 				{
-					EsriShpPolygon* shp = new EsriShpPolygon(this, *(OGRPolygon*)poGeometry);
-					_futures.emplace_back(std::thread(LoadShapesAsync, shp, &_shapes));
+					char* wkt;
+					poGeometry->exportToWkt(&wkt);
+					_futures.emplace_back(std::async(std::launch::async, [&, wkt]() {
+						Shapes::Polygon* shp = new Shapes::Polygon(this, wkt);
+						std::lock_guard<std::mutex> locking(_mutex);
+						_shapes.push_back(shp);
+						}));
+
+					/*delete[]pgeos;*/
 				}
 				else if (poGeometry != NULL)
 				{
@@ -75,14 +79,6 @@ namespace SV::GS {
 			_envelope.MinX = std::min(env.MinX, _envelope.MinX);
 			_envelope.MaxY = std::max(env.MaxY, _envelope.MaxY);
 			_envelope.MinY = std::min(env.MinY, _envelope.MinY);
-		}
-
-		for (auto& e : _futures) {
-			e.join();
-		}
-
-		for (auto& sh : _shapes) {
-			sh->GraphicsInitialization();
 		}
 
 		return true;

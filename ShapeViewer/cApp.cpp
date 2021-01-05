@@ -4,6 +4,8 @@
 #include "core/Log.h"
 #include <profileapi.h>
 
+constexpr double FPS = 1.0 / 10.0;
+
 IMPLEMENT_APP(cApp)
 
 cApp::cApp()
@@ -46,6 +48,10 @@ void cApp::onIdle(wxIdleEvent& evt)
     {
         SV::CORE::Timestep step(((double)time.QuadPart - (double)_lastFrameTime.QuadPart) / (double)fr.QuadPart);
         window->vPaint(step);
+
+        if (step < FPS) {
+            Sleep((FPS - step)*1000);
+        }
         evt.RequestMore(); // render continuously, not only once on idle
         _lastFrameTime = time;
     }
