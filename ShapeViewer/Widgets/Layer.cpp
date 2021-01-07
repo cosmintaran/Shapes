@@ -3,7 +3,7 @@
 #include "Widgets/Drawable.h"
 namespace SV {
 
-	void Layer::Draw(GS::DeviceContext& deviceContext)
+	void Layer::Draw(GS::DrawingContext& deviceContext)
 	{
 		if (!_isVisible) return;
 		for (size_t i = 0; i < _shapes.size(); ++i) {

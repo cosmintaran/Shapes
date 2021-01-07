@@ -15,7 +15,7 @@ namespace SV::Shapes {
 	public:
 		Polygon(Layer* layer);
 		Polygon(Layer* layer, const char* wtk);
-		void vDraw(GS::DeviceContext& deviceContext) override;
+		void vDraw(GS::DrawingContext& deviceContext) override;
 		[[nodiscard]] const Envelope& GetEnvelope()const override;
 		[[nodiscard]] size_t Count() const override;
 		[[nodiscard]] size_t InnerCount() const;

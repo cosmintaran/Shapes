@@ -6,7 +6,7 @@
 
 namespace SV{
 	namespace Shapes { class Drawable; }
-	namespace GS { class DeviceContext; }
+	namespace GS { class DrawingContext; }
 
 	class Layer {
 
@@ -27,10 +27,6 @@ namespace SV{
 		uint8_t GetB()const { return static_cast<uint8_t>(_color.b); }
 		uint8_t GetA()const { return static_cast<uint8_t>(_color.a); }
 
-		//std::vector<Shapes::Drawable*>::iterator* begin() { return &_shapes.begin(); }
-		//std::vector<Shapes::Drawable*>::const_iterator* cbegin()const { return &_shapes.cbegin(); }
-		//std::vector<Shapes::Drawable*>::iterator* end() { return &_shapes.end(); }
-		//std::vector<Shapes::Drawable*>::const_iterator* cend() { return &_shapes.cend(); }
 		Shapes::Drawable* operator[](size_t i){ return _shapes[i];}
 		[[nodiscard]] size_t Count()const { return _shapes.size(); }
 
@@ -38,7 +34,7 @@ namespace SV{
 		bool IsDirty()const { return _isDirty; }
 		void SetIsDirty(bool value) { _isDirty = value; }
 		[[nodiscard]] virtual const Envelope& GetEnvelope()const { return _envelope; }
-		virtual void Draw(GS::DeviceContext& deviceContext);
+		virtual void Draw(GS::DrawingContext& deviceContext);
 		bool IsPointInLayer(const glm::vec3& point)const;
 		virtual ~Layer();
 

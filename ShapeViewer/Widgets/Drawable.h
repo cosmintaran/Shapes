@@ -21,7 +21,7 @@ namespace SV::Shapes {
         Drawable(Layer* layer) :
             _layer(layer) {}
 
-		virtual void vDraw (GS::DeviceContext& deviceContext) = 0;
+		virtual void vDraw (GS::DrawingContext& deviceContext) = 0;
 
         virtual ~Drawable() {
             glDeleteVertexArrays(1, &_vertexArrayRenderID);

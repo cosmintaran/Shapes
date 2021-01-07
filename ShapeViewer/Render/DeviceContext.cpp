@@ -6,7 +6,7 @@
 
 namespace SV::GS {
 
-	DeviceContext::DeviceContext(wxWindow* parent, wxWindowID id, const int* attribList, const wxPoint& pos, const wxSize& size, long style, const wxString& name, const wxPalette& palette)
+	DrawingContext::DrawingContext(wxWindow* parent, wxWindowID id, const int* attribList, const wxPoint& pos, const wxSize& size, long style, const wxString& name, const wxPalette& palette)
 		:wxGLCanvas(parent, id, attribList, pos, size, style, name, palette)
 		, _viewProjectionMatrix(1.0f)
 	{
@@ -16,12 +16,12 @@ namespace SV::GS {
 		SetupPrimitiveGraphics();		
 	}
 
-	DeviceContext::~DeviceContext()
+	DrawingContext::~DrawingContext()
 	{
 		SetCurrent(*m_context);
 	}
 
-	void DeviceContext::InitializeGLAD()
+	void DrawingContext::InitializeGLAD()
 	{
 
 		if (!gladLoadGL())
@@ -53,20 +53,20 @@ namespace SV::GS {
 
 	}
 
-	void DeviceContext::SetupPrimitiveGraphics()
+	void DrawingContext::SetupPrimitiveGraphics()
 	{
 		_shader = std::unique_ptr<Shader>(Shader::FromGLSLTextFiles("res\\shaders\\outline_glsl.vert", "res\\shaders\\outline_glsl.frag"));
 		int location = _shader->GetUniformLocation("u_ViewProjectionMatrix");
 		glUniformMatrix4fv(location, 1, false, glm::value_ptr(_viewProjectionMatrix));
 	}
 
-	void DeviceContext::ClearColor(const glm::vec4& color)
+	void DrawingContext::ClearColor(const glm::vec4& color)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void DeviceContext::UpdateScene(const glm::mat4& cameraControler)
+	void DrawingContext::UpdateScene(const glm::mat4& cameraControler)
 	{
 		_viewProjectionMatrix = cameraControler;
 		glUseProgram(_shader->GetRendererID());
@@ -75,12 +75,12 @@ namespace SV::GS {
 		SetCurrent(*m_context);
 	}
 
-	void DeviceContext::EndScene()
+	void DrawingContext::EndScene()
 	{
 		SwapBuffers();
 	}
 
-	void DeviceContext::Resize(const wxSize& size)
+	void DrawingContext::Resize(const wxSize& size)
 	{
 		SetSize(size);
 		glViewport(0, 0, size.GetWidth(), size.GetHeight());

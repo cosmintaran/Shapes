@@ -24,7 +24,7 @@ namespace SV::Shapes {
 
     }
 
-    void Polygon::vDraw(GS::DeviceContext& deviceContext)
+    void Polygon::vDraw(GS::DrawingContext& deviceContext)
     {
         if (!_isTriangulated) return;
 
@@ -73,11 +73,13 @@ namespace SV::Shapes {
 
     void Polygon::PrepareToDraw()
     {
-
        auto ringType= _polygon.outer();
        _vertices.reserve(ringType.size());
+
        TPPLPoly poly;
        poly.Init(ringType.size());
+       std::list<TPPLPoly> polyList;
+
        size_t k = 0;
        for (auto it = boost::begin(boost::geometry::exterior_ring(_polygon)); it != boost::end(boost::geometry::exterior_ring(_polygon)); ++it)
        {
@@ -94,10 +96,40 @@ namespace SV::Shapes {
            poly[k].id = k;
            ++k;
        }
+       poly.SetOrientation(TPPL_CCW);
+       polyList.push_back(poly);
 
-        poly.SetOrientation(TPPL_CCW);
-        std::list<TPPLPoly> polyList;
-        polyList.push_back(poly);
+       //check for holes
+        if (_polygon.inners().size() > 0) {
+            
+            for (auto& r : _polygon.inners())
+            {
+                TPPLPoly innerPoly;
+                innerPoly.Init(r.size());
+                innerPoly.SetHole(true);
+                size_t j = 0;
+
+                for (auto& p : r) {
+
+                    const float x = boost::geometry::get<0>(p);
+                    const float y = boost::geometry::get<1>(p);
+
+                    SV::GS::Vertex v;
+                    v.Position = glm::vec3(x, y, 0);
+                    _vertices.emplace_back(std::move(v));
+                    indeciesContainer.IndexLinesBuffer.push_back(k);
+
+                    innerPoly[j].x = x;
+                    innerPoly[j].y = y;
+                    innerPoly[j].id = k;
+                    ++k;
+                    ++j;
+                }
+                innerPoly.SetOrientation(TPPL_CW);
+                polyList.push_back(innerPoly);
+            }
+        }
+
         PolyPart_Triangulate(polyList);
     }
 
@@ -147,7 +179,7 @@ namespace SV::Shapes {
 
         for (auto p : result) {
             const int noOfPoints = p.GetNumPoints();
-            if (noOfPoints > 3) continue; // not a triangle
+            if (noOfPoints != 3) continue; // not a triangle
 
             for (int i = 0; i < noOfPoints; ++i) {
                 indeciesContainer.IndexTrianglesBuffer.push_back(static_cast<unsigned int>(p.GetPoint(i).id));

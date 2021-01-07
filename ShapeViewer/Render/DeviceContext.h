@@ -7,16 +7,16 @@
 
 namespace SV::GS {
 
-	class DeviceContext : public wxGLCanvas {
+	class DrawingContext : public wxGLCanvas {
 
 	public:
-		DeviceContext(wxWindow* parent, wxWindowID id = wxID_ANY,
+		DrawingContext(wxWindow* parent, wxWindowID id = wxID_ANY,
 			const int* attribList = 0,
 			const wxPoint& pos = wxDefaultPosition,
 			const wxSize& size = wxDefaultSize, long style = 0L,
 			const wxString& name = L"GLCanvas",
 			const wxPalette& palette = wxNullPalette);
-		virtual~DeviceContext();
+		virtual~DrawingContext();
 		void UpdateScene(const glm::mat4& _camera);
 		void ClearColor(const glm::vec4& color);
 		void EndScene();
@@ -37,9 +37,9 @@ namespace SV::GS {
 
 		void InitializeGLAD();
 		void SetupPrimitiveGraphics();
-		DeviceContext(const DeviceContext& tc) = delete;
-		DeviceContext(DeviceContext&& tc) = delete;
-		DeviceContext& operator=(const DeviceContext& tc) = delete;
-		DeviceContext& operator=(DeviceContext&& tc) = delete;
+		DrawingContext(const DrawingContext& tc) = delete;
+		DrawingContext(DrawingContext&& tc) = delete;
+		DrawingContext& operator=(const DrawingContext& tc) = delete;
+		DrawingContext& operator=(DrawingContext&& tc) = delete;
 	};
 }

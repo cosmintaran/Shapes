@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include"Camera.h"
+#include <wx/window.h>
 
 namespace SV::GS {
 
@@ -28,5 +29,4 @@ namespace SV::GS {
 		m_ViewMatrix = glm::inverse(transform);
 		m_ViewProjectionMatrix = m_ProjectionMatrix* m_ViewMatrix;
 	}
-
 }
