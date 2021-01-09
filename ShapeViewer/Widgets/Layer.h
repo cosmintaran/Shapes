@@ -37,6 +37,7 @@ namespace SV{
 		virtual void Draw(GS::DrawingContext& deviceContext);
 		bool IsPointInLayer(const glm::vec3& point)const;
 		virtual ~Layer();
+		const std::string& GetName()const { return _name; }
 
 
 	public:

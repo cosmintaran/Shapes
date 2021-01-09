@@ -44,14 +44,14 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 	SetStatusText(wxT("                "), 2);
 
 	wxSplitterWindow* spliter = new wxSplitterWindow(this, wxID_ANY, {0,0}, size, wxSP_BORDER | wxSP_LIVE_UPDATE);
-	wxPanel* panel = new wxPanel(spliter);
-	panel->SetBackgroundColour(wxColor(100, 200, 100));
 	_map = new SV::MapControl(spliter, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-
+	_layerCtrl = new SV::LayerControl(spliter, wxID_ANY, { 0,0 });
+	_map->AttachLayerControl(_layerCtrl);
 	Bind(SV::OnMapMouseMove, &cMainWindow::OnCoordsUpdatedCmd, this, _map->GetId());
+	Bind(SV::OnLayerAdded,   &SV::MapControl::OnLayerAddedCmd, _map, _layerCtrl->GetId());
 
 	spliter->SetMinimumPaneSize(100);
-	spliter->SplitVertically(panel, _map, 250);
+	spliter->SplitVertically(_layerCtrl, _map, 250);
 
 	Fit();
 	Centre();
@@ -92,9 +92,8 @@ void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 	if (openFileDialog.ShowModal() == wxID_OK) {
 		_isDataLoading = true;
 		SetStatusText(wxT("Loading shp file"), 3);
-		_map->LoadEsriShapeFile(std::filesystem::path(openFileDialog.GetPath().t_str()));		
+		_layerCtrl->LoadEsriShapeFile(std::filesystem::path(openFileDialog.GetPath().t_str()));	
 		_isDataLoading = false;
-		//}
 	}
 
 	SetStatusText(wxT(""), 3);

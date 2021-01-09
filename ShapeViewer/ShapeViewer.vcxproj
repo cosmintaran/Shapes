@@ -208,6 +208,7 @@ xcopy /Y/E/S/H "$(GEOS)\Release_x64\geos_c.dll" "$(SolutionDir)$(Platform)\$(Con
     <ClInclude Include="Widgets\Envelope.h" />
     <ClInclude Include="Widgets\Layer.h" />
     <ClInclude Include="Widgets\EsriShpLayer.h" />
+    <ClInclude Include="Widgets\LayerControl.h" />
     <ClInclude Include="Widgets\MapControl.h" />
     <ClInclude Include="Widgets\Shapes\Shape.h" />
     <ClInclude Include="Widgets\Shapes\Polygon.h" />
@@ -231,6 +232,7 @@ xcopy /Y/E/S/H "$(GEOS)\Release_x64\geos_c.dll" "$(SolutionDir)$(Platform)\$(Con
     </ClCompile>
     <ClCompile Include="Widgets\Layer.cpp" />
     <ClCompile Include="Widgets\EsriShpLayer.cpp" />
+    <ClCompile Include="Widgets\LayerControl.cpp" />
     <ClCompile Include="Widgets\MapControl.cpp" />
     <ClCompile Include="Widgets\Shapes\Polygon.cpp" />
     <ClCompile Include="xml\Cgxml.cpp" />

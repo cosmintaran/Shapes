@@ -1,15 +1,18 @@
 #include "stdafx.h"
 #include "MapControl.h"
+#include "LayerControl.h"
+#include "Layer.h"
 #include "core/Id.h"
 #include "Widgets/Shapes/Polygon.h"
 #include <boost/geometry/algorithms/within.hpp>
 #include <wx/sizer.h>
+
 namespace SV {
 
 	wxDEFINE_EVENT(OnMapMouseMove, wxCommandEvent);
 
-	MapControl::MapControl(wxWindow* parent, wxWindowID winid, const wxPoint& pos, const wxSize& size, long style, const wxString& name):
-		wxPanel(parent, winid,  pos, size, style, name)
+	MapControl::MapControl(wxWindow* parent, wxWindowID winid, const wxPoint& pos, const wxSize& size, long style, const wxString& name) :
+		wxPanel(parent, winid, pos, size, style, name)
 	{
 
 		_envelope.MaxX = size.GetWidth() / size.GetHeight();
@@ -40,11 +43,7 @@ namespace SV {
 
 	MapControl::~MapControl()
 	{
-		for (auto& l : _layers) {
-			delete l;
-			l = nullptr;
-		}
-		_layers.clear();
+
 	}
 
 	void MapControl::Paint(SV::CORE::Timestep ts)
@@ -77,11 +76,17 @@ namespace SV {
 		Paint();
 	}
 
-	void MapControl::LoadEsriShapeFile(const std::filesystem::path& filePath)
+	void MapControl::AttachLayerControl(const LayerControl* layerCtrl)
 	{
-		SV::EsriShpLayer* lay = new SV::EsriShpLayer(filePath.filename().string().c_str(), filePath.string().c_str(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.0f, 0.0f, 0.8f));
+		if (_layerCtrl == nullptr)
+			_layerCtrl = layerCtrl;
+	}
 
-		if (_layers.size() == 0) {
+	void MapControl::OnLayerAddedCmd(wxCommandEvent& ev)
+	{
+		const auto layers = _layerCtrl->GetLayers();
+		if (layers.size() == 1) {
+			const auto* lay = layers[0];
 			_envelope = lay->GetEnvelope();
 
 			_zoomLevel = 1.2f;
@@ -100,15 +105,7 @@ namespace SV {
 			_camera->SetPosition(_cameraPosition);
 			_cameraMoveSpeed = (right - left) < 0 ? 2.0f : (right - left);
 		}
-		_layers.push_back(lay);
-	}
 
-	void MapControl::LoadCgxmlFile(const std::filesystem::path& filePath)
-	{
-	}
-
-	void MapControl::LoadCgxmlFiles(const std::filesystem::path& folderPath)
-	{
 	}
 
 	void MapControl::OnScroll(wxMouseEvent& event)
@@ -161,12 +158,14 @@ namespace SV {
 		const glm::vec3 currentMousePosition = ScreenToClipSpace(event.GetX(), event.GetY());
 		boost::geometry::model::point<float, 2, boost::geometry::cs::cartesian> pt(currentMousePosition.x, currentMousePosition.y);
 
-		for (size_t i = 0; i < _layers.size(); ++i) {
+		const auto layers = _layerCtrl->GetLayers();
 
-			if (_layers[i]->IsVisible() && _layers[i]->IsPointInLayer(currentMousePosition)) {
+		for (size_t i = 0; i < layers.size(); ++i) {
 
-				for (size_t j = 0; j < _layers[i]->Count(); ++j) {
-					SV::Shapes::Polygon* yy = (SV::Shapes::Polygon*)(*_layers[i])[j];
+			if (layers[i]->IsVisible() && layers[i]->IsPointInLayer(currentMousePosition)) {
+
+				for (size_t j = 0; j < layers[i]->Count(); ++j) {
+					SV::Shapes::Polygon* yy = (SV::Shapes::Polygon*)(*layers[i])[j];
 
 					if (boost::geometry::within(pt, yy->GetBoostPolygon()) == false) continue;
 					yy->SetSelected(!yy->IsSelected());
@@ -188,10 +187,7 @@ namespace SV {
 		auto state = wxGetMouseState();
 		if (state.LeftIsDown()) {
 			wxSetCursor(wxCursor(wxCURSOR_HAND));
-			long x = 0, y = 0;
-			event.GetPosition(&x, &y);
-			const glm::vec3 currentMousePosition = { x, y, 0.0f };
-			Translate(currentMousePosition);
+			Translate({ (float)event.GetX(), (float)event.GetY(), 0.0f });
 		}
 	}
 
@@ -242,14 +238,13 @@ namespace SV {
 
 	void MapControl::Translate(glm::vec3 translation)
 	{
+		const glm::vec3 scrTrans = ScreenToClipSpace(translation.x, translation.y);
+		const glm::vec3 scrLast = ScreenToClipSpace(_lastMousePosition.x, _lastMousePosition.y);
 
-		const double widthRatio = (_envelope.MaxX - _envelope.MinX) / (double)GetSize().GetWidth();
-		const double heighRatio = (_envelope.MaxY - _envelope.MinY) / (double)GetSize().GetHeight();
-		
-		const glm::vec3 delta = translation - _lastMousePosition;
+		const glm::vec3 delta = scrTrans - scrLast;
 
-		_cameraPosition.x -= delta.x * widthRatio;
-		_cameraPosition.y += delta.y * heighRatio;
+		_cameraPosition.x -= delta.x;
+		_cameraPosition.y -= delta.y;
 
 		_camera->SetPosition(_cameraPosition);
 		_lastMousePosition = translation;
@@ -266,10 +261,12 @@ namespace SV {
 		_canvas->ClearColor(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 		_canvas->UpdateScene(_camera->GetViewProjectionMatrix());
 
-		for (size_t i = 0; i < _layers.size(); ++i) {
-			if (_layers[i] != nullptr && _layers[i]->IsVisible()) {
-				_layers[i]->Draw(*_canvas);
-				_layers[i]->SetIsDirty(false);
+		const std::vector<SV::Layer*>& layers = _layerCtrl->GetLayers();
+
+		for (size_t i = 0; i < layers.size(); ++i) {
+			if (layers[i] != nullptr && layers[i]->IsVisible()) {
+				layers[i]->Draw(*_canvas);
+				layers[i]->SetIsDirty(false);
 			}
 		}
 		_canvas->EndScene();

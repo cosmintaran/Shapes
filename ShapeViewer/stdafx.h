@@ -30,3 +30,4 @@
 #include <ogrsf_frmts.h>
 #include <core/Log.h>
 #include <sstream>
+#include <filesystem>

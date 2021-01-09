@@ -1,0 +1,56 @@
+#include "stdafx.h"
+#include "LayerControl.h"
+
+#include "Widgets/EsriShpLayer.h"
+#include "Widgets/Envelope.h"
+
+namespace SV {
+
+	wxDEFINE_EVENT(OnLayerAdded, wxCommandEvent);
+
+	LayerControl::LayerControl(wxWindow* parent, wxWindowID id,
+		const wxPoint& pos,
+		const wxSize& size,
+		int nStrings,
+		const wxString choices[],
+		long style,
+		const wxValidator& validator,
+		const wxString& name)
+		:wxCheckListBox(parent, id, pos, size, nStrings,choices, style, validator, name)
+	{
+		SetBackgroundColour(wxColor(200, 200, 200));
+	}
+
+	LayerControl::~LayerControl()
+	{
+		for (auto& l : _layers) {
+			delete l;
+			l = nullptr;
+		}
+		_layers.clear();
+	}
+
+	void LayerControl::LoadEsriShapeFile(const std::filesystem::path& filePath)
+	{
+		SV::EsriShpLayer* lay = new SV::EsriShpLayer(filePath.filename().string().c_str(), filePath.string().c_str(),
+			glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.0f, 0.0f, 0.8f));
+
+		_layers.push_back(lay);
+
+		int id = Append(lay->GetName());
+		Check(id, lay->IsVisible());
+
+		wxCommandEvent myEvent(OnLayerAdded, GetId());
+		myEvent.SetEventObject(this);
+		ProcessWindowEvent(myEvent);
+	}
+
+	void LayerControl::LoadCgxmlFile(const std::filesystem::path& filePath)
+	{
+	}
+
+	void LayerControl::LoadCgxmlFiles(const std::filesystem::path& folderPath)
+	{
+	}
+
+}

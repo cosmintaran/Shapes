@@ -5,11 +5,11 @@
 #include "Render/DeviceContext.h"
 #include "Render/Camera.h"
 #include "core/Timestep.h"
-#include "Widgets/EsriShpLayer.h"
 #include "Widgets/Envelope.h"
-#include <filesystem>
 
 namespace SV {
+
+    class LayerControl;
 
     wxDECLARE_EVENT(OnMapMouseMove, wxCommandEvent);
 
@@ -25,20 +25,19 @@ namespace SV {
             const wxString& name = wxASCII_STR(wxPanelNameStr));
         ~MapControl();
         void Paint(SV::CORE::Timestep timeStep);
-        void LoadEsriShapeFile(const std::filesystem::path& filePath);
-        void LoadCgxmlFile(const std::filesystem::path& filePath);
-        void LoadCgxmlFiles(const std::filesystem::path&  folderPath);
+        void AttachLayerControl(const LayerControl* layerCtrl);
+        void OnLayerAddedCmd(wxCommandEvent& ev);
 
 	private:
         SV::GS::DrawingContext* _canvas = nullptr;
         std::unique_ptr <SV::GS::OrotographicCamera> _camera;
-        std::vector<SV::Layer*> _layers;
         float _zoomLevel = 1.0f;
         bool _isDragged = false;
         float _cameraMoveSpeed = 0.0f;
         glm::vec3 _cameraPosition{ 0.0f };
         glm::vec3 _lastMousePosition;
         SV::Envelope _envelope;
+        const LayerControl* _layerCtrl = nullptr;
 
     private:
 

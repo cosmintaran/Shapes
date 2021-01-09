@@ -7,6 +7,7 @@
 
 #include "core/Timestep.h"
 #include "Widgets/MapControl.h"
+#include "Widgets/LayerControl.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -29,6 +30,7 @@ public:
 private:
     bool _isDataLoading = false;
     SV::MapControl* _map = nullptr;
+    SV::LayerControl* _layerCtrl = nullptr;
     LARGE_INTEGER startTimeFPS;
     LARGE_INTEGER finalTimeFPS;
     LARGE_INTEGER frequency;
