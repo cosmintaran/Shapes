@@ -27,6 +27,9 @@ namespace SV {
 		void LoadEsriShapeFile(const std::filesystem::path& filePath);
 		void LoadCgxmlFile(const std::filesystem::path& filePath);
 		void LoadCgxmlFiles(const std::filesystem::path& folderPath);
+	private:
+		void OnCheckChanged(wxCommandEvent& ev);
+
 
 	private:
 		std::vector<SV::Layer*> _layers;

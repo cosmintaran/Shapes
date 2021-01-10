@@ -210,6 +210,7 @@ xcopy /Y/E/S/H "$(GEOS)\Release_x64\geos_c.dll" "$(SolutionDir)$(Platform)\$(Con
     <ClInclude Include="Widgets\EsriShpLayer.h" />
     <ClInclude Include="Widgets\LayerControl.h" />
     <ClInclude Include="Widgets\MapControl.h" />
+    <ClInclude Include="Widgets\Shapes\MultiPolygon.h" />
     <ClInclude Include="Widgets\Shapes\Shape.h" />
     <ClInclude Include="Widgets\Shapes\Polygon.h" />
     <ClInclude Include="Widgets\Shapes\ShpTypes.h" />

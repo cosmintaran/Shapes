@@ -6,8 +6,6 @@
 #include "Widgets/Shapes/Polygon.h"
 #include <future>
 
-
-
 namespace SV {
 
 	static std::mutex _mutex;
@@ -49,7 +47,7 @@ namespace SV {
 			{
 				poGeometry = poFeature->GetGeometryRef();
 				if (poGeometry != nullptr
-					&& wkbFlatten(poGeometry->getGeometryType()) == wkbPolygon)
+					&& (wkbFlatten(poGeometry->getGeometryType()) == wkbPolygon /*|| wkbFlatten(poGeometry->getGeometryType()) == wkbMultiPolygon*/))
 				{
 					char* wkt;
 					poGeometry->exportToWkt(&wkt);

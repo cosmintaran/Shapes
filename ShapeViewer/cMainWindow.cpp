@@ -10,6 +10,7 @@
 BEGIN_EVENT_TABLE(cMainWindow, wxFrame)
 //EVT_CLOSE(cMainWindow::OnClose)
 	//EVT_COMMAND(MapControl::GetId(),MapControl::OnMapMouseMove, &cMainWindow::OnCoordsUpdatedCmd)
+
 END_EVENT_TABLE()
 
 
@@ -37,6 +38,9 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 
 	Connect(wxID_OPEN, wxEVT_COMMAND_MENU_SELECTED,
 		wxCommandEventHandler(cMainWindow::OnMenuOpenCmd));
+
+	Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED,
+		wxCommandEventHandler(cMainWindow::OnMenuExitCmd));
 	
 	SetMenuBar(m_pMenuBar);
 	CreateStatusBar(4);
@@ -84,7 +88,6 @@ void cMainWindow::vPaint(const SV::CORE::Timestep& ts)
 }
 
 
-
 void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 {
 	wxFileDialog openFileDialog(this, "Select a shapefile", "", "", "shp files (*.shp)|*.shp", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -104,5 +107,10 @@ void cMainWindow::OnMenuOpenCmd(wxCommandEvent& WXUNUSED)
 void cMainWindow::OnCoordsUpdatedCmd(wxCommandEvent& ev)
 {
 	SetStatusText(ev.GetString(), 0);
+}
+
+void cMainWindow::OnMenuExitCmd(wxCommandEvent& ev)
+{
+	Close();
 }
 

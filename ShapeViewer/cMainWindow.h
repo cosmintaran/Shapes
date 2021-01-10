@@ -41,6 +41,7 @@ private:
     void InitializeUIComponents(const wxSize& size);
     void OnMenuOpenCmd(wxCommandEvent& WXUNUSED(event));
     void OnCoordsUpdatedCmd(wxCommandEvent& ev);
+    void OnMenuExitCmd(wxCommandEvent& ev);
     cMainWindow(const cMainWindow& tw) = delete;
     cMainWindow(cMainWindow&& tw) = delete;
     cMainWindow& operator=(const cMainWindow& tw) = delete;

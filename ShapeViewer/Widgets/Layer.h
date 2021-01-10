@@ -33,6 +33,7 @@ namespace SV{
 		bool IsVisible() const { return _isVisible; }
 		bool IsDirty()const { return _isDirty; }
 		void SetIsDirty(bool value) { _isDirty = value; }
+		void SetVisibility(bool value) { _isVisible = value; }
 		[[nodiscard]] virtual const Envelope& GetEnvelope()const { return _envelope; }
 		virtual void Draw(GS::DrawingContext& deviceContext);
 		bool IsPointInLayer(const glm::vec3& point)const;

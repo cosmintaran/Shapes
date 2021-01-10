@@ -8,20 +8,6 @@
 #include <polypartition.h>
 #include <iostream>
 
-#include "boost/polygon/voronoi.hpp"
-
-
-using boost::polygon::voronoi_builder;
-using boost::polygon::voronoi_diagram;
-
-struct Point
-{
-    double a;
-    double b;
-    Point(double x, double y) : a(x), b(y) {}
-};
-
-
 namespace SV::Shapes {
 
     Polygon::Polygon(Layer* layer)
@@ -91,8 +77,6 @@ namespace SV::Shapes {
        _vertices.reserve(ringType.size());
 
        TPPLPoly poly;
-       std::vector<Point>points;
-       points.reserve(ringType.size());
        poly.Init(ringType.size());
        std::list<TPPLPoly> polyList;
 
@@ -110,7 +94,6 @@ namespace SV::Shapes {
            poly[k].x = x;
            poly[k].y = y;
            poly[k].id = k;
-           points.emplace_back(x, y);
            ++k;
        }
        poly.SetOrientation(TPPL_CCW);

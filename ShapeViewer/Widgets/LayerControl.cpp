@@ -19,6 +19,7 @@ namespace SV {
 		:wxCheckListBox(parent, id, pos, size, nStrings,choices, style, validator, name)
 	{
 		SetBackgroundColour(wxColor(200, 200, 200));
+		Bind(wxEVT_CHECKLISTBOX, &LayerControl::OnCheckChanged, this);
 	}
 
 	LayerControl::~LayerControl()
@@ -51,6 +52,19 @@ namespace SV {
 
 	void LayerControl::LoadCgxmlFiles(const std::filesystem::path& folderPath)
 	{
+	}
+
+	void LayerControl::OnCheckChanged(wxCommandEvent& ev)
+	{
+		int layerIndex = ev.GetInt();
+		if (layerIndex < 0 || _layers.size() <= layerIndex) {
+			ev.Skip();
+		}
+		else {
+			_layers[layerIndex]->SetVisibility(!_layers[layerIndex]->IsVisible());
+			ev.Skip();
+		}
+
 	}
 
 }
