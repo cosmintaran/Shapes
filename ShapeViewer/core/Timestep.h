@@ -13,7 +13,7 @@ namespace SV::CORE {
 		double GetMiliseconds()const { return _time * 1000.0; }
 
 	private:
-		//in seconsd
+		//in seconds
 		double _time;
 	};
 

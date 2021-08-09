@@ -16,7 +16,11 @@ namespace SV{
 		glm::vec4 _outlineColor;
 		bool _isVisible = true;
 		bool _isDirty = true;
-		std::vector<Shapes::Drawable*> _shapes;
+
+    public:
+        std::vector<Shapes::Drawable *> _shapes;
+
+    protected:
 		Envelope _envelope;
 
 	public:

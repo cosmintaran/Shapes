@@ -22,7 +22,7 @@ namespace SV {
 
 		_cameraMoveSpeed = (_envelope.MaxX - _envelope.MinX) > 0 ? (_envelope.MaxX - _envelope.MinX) : 2.0f;
 
-		_camera = std::make_unique<SV::GS::OrotographicCamera>(_envelope.MinX * _zoomLevel, _envelope.MaxX * _zoomLevel, _envelope.MinY * _zoomLevel, _envelope.MaxY * _zoomLevel, -1.0f, 10.0f);
+		_camera = std::make_unique<SV::GS::OrotographicCamera>(_envelope.MinX * _zoomLevel, _envelope.MaxX * _zoomLevel, _envelope.MinY * _zoomLevel, _envelope.MaxY * _zoomLevel, -1.0f, 1.0f);
 		_canvas = new SV::GS::DrawingContext(this, Window::ID::GLCONTEXT, nullptr, wxDefaultPosition, size);
 
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -39,6 +39,7 @@ namespace SV {
 		_canvas->Bind(wxEVT_KEY_UP, &MapControl::OnKeyUp, this);
 
 		SetBackgroundColour(wxColor(255, 0, 255));
+       
 	}
 
 	MapControl::~MapControl()
@@ -187,7 +188,7 @@ namespace SV {
 		auto state = wxGetMouseState();
 		if (state.LeftIsDown()) {
 			wxSetCursor(wxCursor(wxCURSOR_HAND));
-			Translate({ (float)event.GetX(), (float)event.GetY(), 0.0f });
+			Translate({ (float)event.GetX(), (float)event.GetY(), 1.0f });
 		}
 	}
 
@@ -233,6 +234,17 @@ namespace SV {
 		glm::vec3 projected(posX, (float)GetSize().GetHeight() - posY, 1.0f);
 		glm::vec4 viewport(0, 0, (float)GetSize().GetWidth(), (float)GetSize().GetHeight());
 		glm::vec3 coords = glm::unProject(projected, _camera->GetViewMatrix(), _camera->GetProjectionMatrix(), viewport);
+
+		glm::mat inv = glm::inverse(_camera->GetViewMatrix() * _camera->GetProjectionMatrix());
+        float tmpX = ((2 * posX - viewport.x) / viewport.z) - 1;
+        float tmpY = ((2 * (viewport.w - posY) - viewport.y) / viewport.w);
+        float tmpZ = 2 * 1.0f - 1;
+
+
+        float tmpW = 1.0f;
+
+		auto r = inv * glm::vec4(tmpX, tmpY, tmpZ, tmpW);
+
 		return coords;
 	}
 
@@ -241,10 +253,7 @@ namespace SV {
 		const glm::vec3 scrTrans = ScreenToClipSpace(translation.x, translation.y);
 		const glm::vec3 scrLast = ScreenToClipSpace(_lastMousePosition.x, _lastMousePosition.y);
 
-		const glm::vec3 delta = scrTrans - scrLast;
-
-		_cameraPosition.x -= delta.x;
-		_cameraPosition.y -= delta.y;
+		_cameraPosition -= (scrTrans - scrLast);
 
 		_camera->SetPosition(_cameraPosition);
 		_lastMousePosition = translation;

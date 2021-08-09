@@ -13,10 +13,12 @@ namespace SV::GS {
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	}
+
 	void SetGLDebugLogLevel(DebugLogLevel level)
 	{
 		s_DebugLogLevel = level;
 	}
+
 	void OpenGLLogMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 	{
 #if _DEBUG

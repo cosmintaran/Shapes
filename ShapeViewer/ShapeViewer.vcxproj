@@ -100,7 +100,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_lib;$(GEOS)\Debug_x86;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"
@@ -126,7 +126,7 @@ xcopy /Y/E/S/H "$(GEOS)Debug_x86\geos_c.dll" "$(SolutionDir)$(Platform)\$(Config
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_lib;$(GEOS)\Release_x86;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"
@@ -149,13 +149,12 @@ xcopy /Y/E/S/H "$(GEOS)\Release_x86\geos_c.dll" "$(SolutionDir)$(Platform)\$(Con
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_lib;$(GEOS)\Debug_x64;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"
 xcopy /Y/E/S/H "$(GDAL)\bin\gdal204.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy /Y/E/S/H "$(GEOS)\Debug_x64\geos.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy /Y/E/S/H "$(GEOS)\Debug_x64\geos_c.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -177,7 +176,7 @@ xcopy /Y/E/S/H "$(GEOS)\Debug_x64\geos_c.dll" "$(SolutionDir)$(Platform)\$(Confi
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_lib;$(GEOS)\Release_x64;%(AdditionalLibraryDirectories);$(BOOST)stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdal_i.lib;geos.lib;geos_c.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y/E/S/H "$(ProjectDir)res" "$(SolutionDir)$(Platform)\$(Configuration)\res\"

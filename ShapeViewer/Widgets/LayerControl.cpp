@@ -3,6 +3,7 @@
 
 #include "Widgets/EsriShpLayer.h"
 #include "Widgets/Envelope.h"
+#include "Widgets/Shapes/Polygon.h"
 
 namespace SV {
 
@@ -52,7 +53,15 @@ namespace SV {
 
 	void LayerControl::LoadCgxmlFiles(const std::filesystem::path& folderPath)
 	{
-	}
+    }
+
+    void LayerControl::LoadDummyTestPrimitives() {
+
+		SV::Layer *lay = new SV::Layer("DummyLayer", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.0f, 0.0f, 0.8f));
+        SV::Shapes::Polygon *Polygon = new SV::Shapes::Polygon(lay, "POLYGON ((-0.6495 -0.3750, 0.0000 0.7500, 0.6495 -0.3750))");
+        lay->_shapes.push_back(Polygon);
+        _layers.push_back(lay);
+    }
 
 	void LayerControl::OnCheckChanged(wxCommandEvent& ev)
 	{

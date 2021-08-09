@@ -14,7 +14,7 @@ namespace SV {
 	bool Layer::IsPointInLayer(const glm::vec3& point) const
 	{
 		return _envelope.MinX <= point.x && _envelope.MaxX >= point.x &&
-			   _envelope.MinY <= point.y && _envelope.MaxY >= point.y;
+			_envelope.MinY <= point.y && _envelope.MaxY >= point.y;
 	}
 
 	Layer::~Layer()
@@ -29,8 +29,8 @@ namespace SV {
 
 	Layer::Layer(const char* name, glm::vec4 color, glm::vec4 outlineColor)
 		:_name(name)
-		,_color(color)
-		,_outlineColor(outlineColor)
+		, _color(color)
+		, _outlineColor(outlineColor)
 	{
 
 	}

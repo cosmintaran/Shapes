@@ -59,7 +59,7 @@ void cMainWindow::InitializeUIComponents(const wxSize& size)
 
 	Fit();
 	Centre();
-
+    _layerCtrl->LoadDummyTestPrimitives();
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&startTimeFPS);
 }

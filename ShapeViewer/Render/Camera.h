@@ -8,7 +8,7 @@ namespace SV::GS{
 	class OrotographicCamera {
 
 	public:
-		OrotographicCamera(float left, float right, float bottom, float top, float nearest = -1.0f, float farest = 1000.0f);
+		OrotographicCamera(float left, float right, float bottom, float top, float nearest = -1.0f, float farest = 1.0f);
 		void SetProjection(float left, float right, float bottom, float top);
 		void SetProjection(const glm::mat4& projection);
 
